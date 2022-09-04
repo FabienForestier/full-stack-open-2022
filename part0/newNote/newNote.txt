@@ -1,0 +1,23 @@
+title New Note
+
+User->Browser: User clics, on the submit button
+Browser->Server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+Server->Browser: 302 Redirect /exampleapp/notes
+Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+Server-->Browser: HTML code
+Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+Server-->Browser: main.css
+Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+Server-->Browser: main.js
+
+note over Browser:
+Browser starts executes the js code
+that requests JSON data from server 
+end note
+
+Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+Server-->Browser: data.json
+
+note over Browser:
+Browser displays the JSON data received 
+end note

@@ -1,0 +1,13 @@
+title Single Page APP
+
+User->Browser: User clics, on the submit button
+
+note over Browser:
+Browser prevent the default submiting behavior
+It adds the newly created note to the list
+Rerender the list on the page
+Finally sends the HTTP request to the server
+end note
+
+Browser->Server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa Content-Type: Application/json
+Server->Browser: 201 Created
