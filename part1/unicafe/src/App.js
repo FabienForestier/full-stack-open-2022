@@ -4,7 +4,7 @@ const Button = ({ text, onClick }) => {
   return <button onClick={onClick}>{text}</button>
 }
 
-const StatisticLine = ({ name, value }) => <p>{name} {value}</p>;
+const StatisticLine = ({ name, value }) => <tr><td>{name}</td><td>{value}</td></tr>;
 
 const Statistics = ({ good, neutral, bad }) => {
   const feedbackCounts = good + neutral + bad;
@@ -12,14 +12,16 @@ const Statistics = ({ good, neutral, bad }) => {
   const positiveFeedbackPercentage = good * 100 / feedbackCounts;
 
   if (feedbackCounts > 0) {
-    return <div>
-      <StatisticLine name="good" value={good} />
-      <StatisticLine name="neutral" value={neutral} />
-      <StatisticLine name="bad" value={bad} />
-      <StatisticLine name="all" value={feedbackCounts} />
-      <StatisticLine name="average" value={averageScore} />
-      <StatisticLine name="positive" value={positiveFeedbackPercentage} />
-    </div>
+    return <table>
+      <tbody>
+        <StatisticLine name="good" value={good} />
+        <StatisticLine name="neutral" value={neutral} />
+        <StatisticLine name="bad" value={bad} />
+        <StatisticLine name="all" value={feedbackCounts} />
+        <StatisticLine name="average" value={averageScore} />
+        <StatisticLine name="positive" value={positiveFeedbackPercentage} />
+      </tbody>
+    </table>
   }
   return <p>No feedback given</p>
 }
