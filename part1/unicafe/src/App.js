@@ -4,20 +4,22 @@ const Button = ({ text, onClick }) => {
   return <button onClick={onClick}>{text}</button>
 }
 
-const Statistics = ({ good, neutral, bad }) => {
-  const computeFeedbackCounts = good + neutral + bad;
-  const computeAverageScore = (1 * good + (-1 * bad)) / computeFeedbackCounts;
-  const computePositiveFeedbackPercentage = good * 100 / computeFeedbackCounts;
+const StatisticLine = ({ name, value }) => <p>{name} {value}</p>;
 
-  if (computeFeedbackCounts > 0) {
-    return <>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {computeFeedbackCounts}</p>
-      <p>average {computeAverageScore}</p>
-      <p>positive {computePositiveFeedbackPercentage}%</p>
-    </>
+const Statistics = ({ good, neutral, bad }) => {
+  const feedbackCounts = good + neutral + bad;
+  const averageScore = (1 * good + (-1 * bad)) / feedbackCounts;
+  const positiveFeedbackPercentage = good * 100 / feedbackCounts;
+
+  if (feedbackCounts > 0) {
+    return <div>
+      <StatisticLine name="good" value={good} />
+      <StatisticLine name="neutral" value={neutral} />
+      <StatisticLine name="bad" value={bad} />
+      <StatisticLine name="all" value={feedbackCounts} />
+      <StatisticLine name="average" value={averageScore} />
+      <StatisticLine name="positive" value={positiveFeedbackPercentage} />
+    </div>
   }
   return <p>No feedback given</p>
 }
