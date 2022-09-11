@@ -1,8 +1,7 @@
-import { useState } from 'react'
-
-const Button = ({ text, onClick }) => {
-  return <button onClick={onClick}>{text}</button>
-}
+import { useState, useEffect } from 'react'
+import { getRandomInt } from './math.helper'
+import { Anecdote } from './Anecdote'
+import { Button } from './Button'
 
 const App = () => {
   const anecdotes = [
@@ -15,36 +14,31 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.'
   ];
 
-  const getRandomInt = (max) => {
-    return Math.floor(Math.random() * max);
-  }
-
   const pickRandomAnecdote = () => {
-    const currentIndex = selected;
     const newIndex = getRandomInt(anecdotes.length);
-
-    if (currentIndex !== newIndex) {
-      setSelected(newIndex);
-    } else {
-      pickRandomAnecdote();
-    }
-  }
-
+    selectedIndex !== newIndex ? setSelectedIndex(newIndex) : pickRandomAnecdote();
+  };
   const voteForCurrentAnecdote = () => {
-    const pointsCopy = [...points];
-    pointsCopy[selected] += 1;
-    setPoints(pointsCopy);
-  }
+    const votesCopy = [...votes];
+    votesCopy[selectedIndex] += 1;
+    setVotes(votesCopy);
+  };
 
-  const [selected, setSelected] = useState(0)
-  const [points, setPoints] = useState(anecdotes.map(() => 0))
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [maxVoteIndex, setMaxVoteIndex] = useState(0)
+  const [votes, setVotes] = useState(anecdotes.map(() => 0))
+  useEffect(() => {
+    const max = Math.max(...votes);
+    const maxIndex = votes.indexOf(max);
+    setMaxVoteIndex(maxIndex);
+  }, [votes]);
 
   return (
     <div>
-      <p>{anecdotes[selected]}</p>
-      <p>has {points[selected]} votes</p>
+      <Anecdote type="Anecdote of the day" anecdote={anecdotes[selectedIndex]} votes={votes[selectedIndex]} />
       <Button text="Vote" onClick={voteForCurrentAnecdote} />
       <Button text="Next anecdote" onClick={pickRandomAnecdote} />
+      <Anecdote type="Anecdote with most votes" anecdote={anecdotes[maxVoteIndex]} votes={votes[maxVoteIndex]} />
     </div>
   )
 }
