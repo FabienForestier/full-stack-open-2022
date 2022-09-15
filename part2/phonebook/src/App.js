@@ -10,12 +10,18 @@ const App = () => {
 
   const onSubmit = (event) => {
     event.preventDefault();
+
+    if (isPersonAlreadyInPhonebook(newName)) {
+      return alert(`${newName} is already added to phonebook`);
+    }
+
     setPersons(persons.concat({ name: newName }));
     setNewName('');
   };
   const onNameChange = (event) => {
     setNewName(event.target.value)
   };
+  const isPersonAlreadyInPhonebook = (name) => persons.findIndex((person) => person.name === name) >= 0;
 
   return (
     <div>
