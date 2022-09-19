@@ -1,15 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Persons from './components/Persons';
 import PersonForm from './components/PersonForm';
 import Filter from './components/Filter';
+import axios from 'axios';
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', phoneNumber: '0607080910', id: 0 },
-  ])
+  const personsUrl = 'http://localhost:3001/persons'
+  const [persons, setPersons] = useState([])
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    const loadPhonebook = async () => {
+      const { data: persons } = await axios.get(personsUrl);
+      setPersons(persons);
+    };
+
+    loadPhonebook();
+  }, [])
 
   const onSubmit = (event) => {
     event.preventDefault();
