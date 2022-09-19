@@ -14,9 +14,12 @@ function App() {
         return;
       }
       const query = `${countriesUrl}${filterValue}`;
-      const { data: countries } = await axios.get(query);
-
-      setCountries(countries);
+      try {
+        const { data: countries } = await axios.get(query);
+        setCountries(countries);
+      } catch (error) {
+        setCountries([])
+      }
     }
 
     getCountries();
