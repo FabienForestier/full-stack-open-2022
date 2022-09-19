@@ -13,8 +13,9 @@ function App() {
         setCountries([]);
         return;
       }
-      const query = `${countriesUrl}${filterValue}`
+      const query = `${countriesUrl}${filterValue}`;
       const { data: countries } = await axios.get(query);
+
       setCountries(countries);
     }
 
@@ -22,7 +23,7 @@ function App() {
   }, [filterValue])
   return <div>
     <Filter filterValue={filterValue} onChange={(event) => setFilterValue(event.target.value)} />
-    <Countries countries={countries} />
+    {filterValue && <Countries countries={countries} onShowCountry={(countryName) => setFilterValue(countryName)} />}
   </div>
 }
 
