@@ -2,32 +2,29 @@ import { useEffect, useState } from 'react';
 import Persons from './components/Persons';
 import PersonForm from './components/PersonForm';
 import Filter from './components/Filter';
-import axios from 'axios';
+import personsService from './services/persons';
 
 const App = () => {
-  const personsUrl = 'http://localhost:3001/persons'
   const [persons, setPersons] = useState([])
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    const loadPhonebook = async () => {
-      const { data: persons } = await axios.get(personsUrl);
-      setPersons(persons);
-    };
-
-    loadPhonebook();
+    personsService.getAll().then((personsInDB) => {
+      setPersons(personsInDB);
+    });
   }, [])
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
 
     if (isPersonAlreadyInPhonebook(name)) {
       return alert(`${name} is already added to phonebook`);
     }
 
-    setPersons(persons.concat({ name, phoneNumber, id: persons.length }));
+    const addedPerson = await personsService.add({ name, phoneNumber })
+    setPersons(persons.concat(addedPerson));
     setName('');
     setPhoneNumber('');
   };
