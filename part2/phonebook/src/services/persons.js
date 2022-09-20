@@ -12,6 +12,10 @@ const add = async (newPerson) => {
     return addedPerson;
 }
 
-const personsService = { getAll, add };
+const deleteById = (id) => {
+    return axios.delete(`${personsUrl}/${id}`);
+}
+
+const personsService = { getAll, add, deleteById };
 
 export default personsService;

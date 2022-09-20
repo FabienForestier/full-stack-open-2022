@@ -28,6 +28,12 @@ const App = () => {
     setName('');
     setPhoneNumber('');
   };
+  const onDeleteClicked = async (person) => {
+    if (window.confirm(`Do you want to delete ${person.name}`)) {
+      await personsService.deleteById(person.id);
+      setPersons(persons.filter((p) => p.id !== person.id));
+    }
+  }
   const onNameChange = (event) => {
     setName(event.target.value)
   };
@@ -47,7 +53,7 @@ const App = () => {
       <h2>Add new contacts</h2>
       <PersonForm name={name} onNameChange={onNameChange} onSubmit={onSubmit} phoneNumber={phoneNumber} onPhoneNumberChange={onPhoneNumberChange} />
       <h2>Numbers</h2>
-      <Persons persons={persons.filter(isPersonMatching)} />
+      <Persons persons={persons.filter(isPersonMatching)} onDeleteClicked={onDeleteClicked} />
     </div>
   )
 }
