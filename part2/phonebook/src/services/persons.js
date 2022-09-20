@@ -12,10 +12,15 @@ const add = async (newPerson) => {
     return addedPerson;
 }
 
+const update = async (personToUpdate) => {
+    const { data: updatedPerson } = await axios.put(`${personsUrl}/${personToUpdate.id}`, personToUpdate);
+    return updatedPerson;
+}
+
 const deleteById = (id) => {
     return axios.delete(`${personsUrl}/${id}`);
 }
 
-const personsService = { getAll, add, deleteById };
+const personsService = { getAll, add, update, deleteById };
 
 export default personsService;

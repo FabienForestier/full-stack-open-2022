@@ -18,15 +18,15 @@ const App = () => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
+    const existingPerson = findPersonInPhonebook(name);
 
-    if (isPersonAlreadyInPhonebook(name)) {
-      return alert(`${name} is already added to phonebook`);
+    if (!existingPerson) {
+      return addPerson({ name, phoneNumber });
     }
 
-    const addedPerson = await personsService.add({ name, phoneNumber })
-    setPersons(persons.concat(addedPerson));
-    setName('');
-    setPhoneNumber('');
+    if (existingPerson && window.confirm(`${name} is already added to phonebook, do you want to update the phone number ?`)) {
+      return updatePerson(existingPerson);
+    }
   };
   const onDeleteClicked = async (person) => {
     if (window.confirm(`Do you want to delete ${person.name}`)) {
@@ -43,9 +43,22 @@ const App = () => {
   const onSearchTermChange = (event) => {
     setSearchTerm(event.target.value)
   };
-  const isPersonAlreadyInPhonebook = (name) => persons.findIndex((person) => person.name === name) >= 0;
+  const findPersonInPhonebook = (name) => persons.find((person) => person.name === name);
   const isPersonMatching = (person) => person.name.toLowerCase().includes(searchTerm);
-
+  const updatePerson = async (personToUpdate) => {
+    const updatedContact = await personsService.update({ ...personToUpdate, phoneNumber });
+    setPersons(persons.map((person) => person.id === personToUpdate.id ? updatedContact : person));
+    resetForm();
+  }
+  const addPerson = async (personToAdd) => {
+    const addedPerson = await personsService.add(personToAdd)
+    setPersons(persons.concat(addedPerson));
+    resetForm();
+  }
+  const resetForm = () => {
+    setName('');
+    setPhoneNumber('');
+  }
   return (
     <div>
       <h2>Phonebook</h2>
