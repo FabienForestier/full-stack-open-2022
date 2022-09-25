@@ -28,6 +28,10 @@ app.get('/', (request, response) => {
     response.send('<h1>Phone Book API</h1>')
 })
 
+app.get('/info', (request, response) => {
+    response.send(`<p>Phone book has info for ${persons.length}</p><p>${new Date().toString()}</p>`)
+})
+
 app.get('/api/persons', (request, response) => {
     response.json(persons)
 })
