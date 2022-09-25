@@ -3,12 +3,14 @@ import Persons from './components/Persons';
 import PersonForm from './components/PersonForm';
 import Filter from './components/Filter';
 import personsService from './services/persons';
+import Notification from './components/Notification';
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [notificationMessage, setNotificationMessage] = useState(null);
 
   useEffect(() => {
     personsService.getAll().then((personsInDB) => {
@@ -49,19 +51,28 @@ const App = () => {
     const updatedContact = await personsService.update({ ...personToUpdate, phoneNumber });
     setPersons(persons.map((person) => person.id === personToUpdate.id ? updatedContact : person));
     resetForm();
+    displayNotification(`Updated ${updatedContact.name}`);
   }
   const addPerson = async (personToAdd) => {
     const addedPerson = await personsService.add(personToAdd)
     setPersons(persons.concat(addedPerson));
     resetForm();
+    displayNotification(`Added ${addedPerson.name}`);
   }
   const resetForm = () => {
     setName('');
     setPhoneNumber('');
   }
+  const displayNotification = (message) => {
+    setNotificationMessage(message);
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000);
+  }
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} />
       <Filter searchTerm={searchTerm} onChange={onSearchTermChange} />
       <h2>Add new contacts</h2>
       <PersonForm name={name} onNameChange={onNameChange} onSubmit={onSubmit} phoneNumber={phoneNumber} onPhoneNumberChange={onPhoneNumberChange} />
