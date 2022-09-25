@@ -64,6 +64,14 @@ app.post('/api/persons/', (request, response) => {
         });
     }
 
+    const contactAlreadyExists = persons.find((p) => p.name === person.name);
+
+    if (contactAlreadyExists) {
+        return response.status(400).json({
+            error: 'Name must be unique'
+        });
+    }
+
     if (!person.number) {
         return response.status(400).json({
             error: 'Number missing'
