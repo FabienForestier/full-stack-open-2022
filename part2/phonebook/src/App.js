@@ -32,7 +32,12 @@ const App = () => {
   };
   const onDeleteClicked = async (person) => {
     if (window.confirm(`Do you want to delete ${person.name}`)) {
-      await personsService.deleteById(person.id);
+      try {
+        await personsService.deleteById(person.id);
+        displayNotification(`Deleted ${person.name} information`);
+      } catch {
+        displayNotification(`Information of ${person.name} has already been removed from server.`, 'error')
+      }
       setPersons(persons.filter((p) => p.id !== person.id));
     }
   }
@@ -63,8 +68,8 @@ const App = () => {
     setName('');
     setPhoneNumber('');
   }
-  const displayNotification = (message) => {
-    setNotificationMessage(message);
+  const displayNotification = (message, type = 'success') => {
+    setNotificationMessage({ message, type });
     setTimeout(() => {
       setNotificationMessage(null)
     }, 5000);
@@ -72,7 +77,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage} />
+      <Notification notification={notificationMessage} />
       <Filter searchTerm={searchTerm} onChange={onSearchTermChange} />
       <h2>Add new contacts</h2>
       <PersonForm name={name} onNameChange={onNameChange} onSubmit={onSubmit} phoneNumber={phoneNumber} onPhoneNumberChange={onPhoneNumberChange} />
