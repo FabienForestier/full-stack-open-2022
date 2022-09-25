@@ -25,15 +25,22 @@ let persons = [
 ];
 
 app.get('/', (request, response) => {
-    response.send('<h1>Phone Book API</h1>')
+    response.send('<h1>Phone Book API</h1>');
 })
 
 app.get('/info', (request, response) => {
-    response.send(`<p>Phone book has info for ${persons.length}</p><p>${new Date().toString()}</p>`)
+    response.send(`<p>Phone book has info for ${persons.length}</p><p>${new Date().toString()}</p>`);
 })
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    response.json(persons);
+})
+
+app.get('/api/persons/:id', (request, response) => {
+    const personId = Number(request.params.id);
+
+    const matchingPerson = persons.find((person) => person.id === personId);
+    return matchingPerson ? response.json(matchingPerson) : response.status(404).end();
 })
 
 const PORT = 3001
