@@ -1,14 +1,19 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors')
+
 morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
 morgan.format('custom', (tokens, req, res) => {
     const tiny = [req.method, req.url, req.status, tokens.res(req, res, 'content-length'), '-', tokens['response-time'](req, res), 'ms'];
     return req.method === 'POST' ? [...tiny, tokens.body(req)].join(' ') : tiny.join(' ');
 })
+
 const app = express();
 
+app.use(cors())
 app.use(express.json());
 app.use(morgan('custom'));
+app.use(express.static('frontend-build'))
 
 function generateId() {
     return Math.floor(Math.random() * 1000000);
@@ -94,7 +99,7 @@ app.post('/api/persons/', (request, response) => {
     return response.json(newPerson);
 });
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
