@@ -1,9 +1,9 @@
-const PersonForm = ({ onSubmit, onNameChange, name, onPhoneNumberChange, phoneNumber }) => <form onSubmit={onSubmit}>
+const PersonForm = ({ onSubmit, onNameChange, name, onNumberChange, number }) => <form onSubmit={onSubmit}>
     <div>
         name: <input value={name} onChange={onNameChange} />
     </div>
     <div>
-        phone: <input value={phoneNumber} onChange={onPhoneNumberChange} />
+        phone: <input value={number} onChange={onNumberChange} />
     </div>
     <div>
         <button type="submit">add</button>
