@@ -1,10 +1,14 @@
 const express = require('express');
 const morgan = require('morgan');
-
+morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
+morgan.format('custom', (tokens, req, res) => {
+    const tiny = [req.method, req.url, req.status, tokens.res(req, res, 'content-length'), '-', tokens['response-time'](req, res), 'ms'];
+    return req.method === 'POST' ? [...tiny, tokens.body(req)].join(' ') : tiny.join(' ');
+})
 const app = express();
 
 app.use(express.json());
-app.use(morgan('tiny'));
+app.use(morgan('custom'));
 
 function generateId() {
     return Math.floor(Math.random() * 1000000);
