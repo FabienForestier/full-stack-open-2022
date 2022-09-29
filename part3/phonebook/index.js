@@ -16,10 +16,6 @@ app.use(express.json());
 app.use(morgan('custom'));
 app.use(express.static('frontend-build'))
 
-function generateId() {
-    return Math.floor(Math.random() * 1000000);
-}
-
 let persons = [
     {
         "id": 1,
@@ -95,13 +91,15 @@ app.post('/api/persons/', (request, response) => {
             error: 'Number missing'
         });
     }
-    const newPerson = {
-        id: generateId(),
+
+    const newPerson = new Person({
         name: person.name,
         number: person.number
-    }
-    persons = persons.concat(newPerson);
-    return response.json(newPerson);
+    })
+
+    newPerson.save().then(savedPerson => {
+        response.json(savedPerson)
+    })
 });
 
 const PORT = process.env.PORT || 3001
