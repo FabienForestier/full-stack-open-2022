@@ -16,37 +16,16 @@ app.use(express.json());
 app.use(morgan('custom'));
 app.use(express.static('frontend-build'))
 
-let persons = [
-    {
-        "id": 1,
-        "name": "Arto Hellas",
-        "number": "040-123456"
-    },
-    {
-        "id": 2,
-        "name": "Ada Lovelace",
-        "number": "39-44-5323523"
-    },
-    {
-        "id": 3,
-        "name": "Dan Abramov",
-        "number": "12-43-234345"
-    },
-    {
-        "id": 4,
-        "name": "Mary Poppendieck",
-        "number": "39-23-6423122"
-    }
-];
-
 const Person = require('./models/person')
 
 app.get('/', (_, response) => {
     response.send('<h1>Phone Book API</h1>');
 });
 
-app.get('/info', (_, response) => {
-    response.send(`<p>Phone book has info for ${persons.length}</p><p>${new Date().toString()}</p>`);
+app.get('/info', (_, response, next) => {
+    Person.count().then((numberOfContacts) => {
+        response.send(`<p>Phone book has info for ${numberOfContacts} persons</p><p>${new Date().toString()}</p>`);
+    }).catch((error) => next(error));
 });
 
 app.get('/api/persons', (_, response) => {
@@ -55,11 +34,10 @@ app.get('/api/persons', (_, response) => {
     }).catch((error) => next(error))
 });
 
-app.get('/api/persons/:id', (request, response) => {
-    const personId = Number(request.params.id);
-
-    const matchingPerson = persons.find((person) => person.id === personId);
-    return matchingPerson ? response.json(matchingPerson) : response.status(404).end();
+app.get('/api/persons/:id', (request, response, next) => {
+    Person.findById(request.params.id).exec().then((person) => {
+        person ? response.json(person) : response.status(404).end();
+    }).catch((error) => next(error));
 });
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -70,7 +48,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
     }).catch(error => next(error))
 });
 
-app.post('/api/persons/', async (request, response) => {
+app.post('/api/persons/', (request, response, next) => {
     const person = request.body;
 
     if (!person.name) {
@@ -79,31 +57,33 @@ app.post('/api/persons/', async (request, response) => {
         });
     }
 
-    const contactAlreadyExists = await Person.findOne({ name: person.name }).exec();
+    Person.findOne({ name: person.name }).exec().then((contactAlreadyExists) => {
+        if (contactAlreadyExists) {
+            return response.status(400).json({
+                error: 'Name must be unique'
+            });
+        }
 
-    if (contactAlreadyExists) {
-        return response.status(400).json({
-            error: 'Name must be unique'
-        });
-    }
+        if (!person.number) {
+            return response.status(400).json({
+                error: 'Number missing'
+            });
+        }
 
-    if (!person.number) {
-        return response.status(400).json({
-            error: 'Number missing'
-        });
-    }
+        const newPerson = new Person({
+            name: person.name,
+            number: person.number
+        })
 
-    const newPerson = new Person({
-        name: person.name,
-        number: person.number
-    })
-
-    newPerson.save().then(savedPerson => {
+        return newPerson.save();
+    }).then(savedPerson => {
         response.json(savedPerson)
-    }).catch((error) => next(error))
+    }).catch((error) => next(error));
+
+
 });
 
-app.put('/api/persons/:id', (request, response) => {
+app.put('/api/persons/:id', (request, response, next) => {
     const personId = request.params.id;
 
     if (!request.body.name || !request.body.number) {
