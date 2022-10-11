@@ -23,11 +23,15 @@ const App = () => {
     const existingPerson = findPersonInPhonebook(name);
 
     if (!existingPerson) {
-      return addPerson({ name, number });
+      return addPerson({ name, number }).catch(error => {
+        displayNotification(error.response.data.error, 'error')
+      });
     }
 
     if (existingPerson && window.confirm(`${name} is already added to phonebook, do you want to update the phone number ?`)) {
-      return updatePerson(existingPerson);
+      return updatePerson(existingPerson).catch(error => {
+        displayNotification(error.response.data.error, 'error')
+      });
     }
   };
   const onDeleteClicked = async (person) => {
