@@ -10,34 +10,34 @@ const newPersonName = process.argv[2]
 const newPersonNumber = process.argv[3]
 
 const personSchema = new mongoose.Schema({
-    name: String,
-    number: String,
+  name: String,
+  number: String,
 })
 
 const Person = mongoose.model('Person', personSchema)
 
 mongoose
-    .connect(url)
-    .then(() => {
-        if (newPersonName && newPersonNumber) {
-            const person = new Person({
-                name: newPersonName,
-                number: newPersonNumber,
-            })
-            return person.save().then(() => {
-                console.log('Added', newPersonName, newPersonNumber, 'to phonebook');
-            })
-        }
+  .connect(url)
+  .then(() => {
+    if (newPersonName && newPersonNumber) {
+      const person = new Person({
+        name: newPersonName,
+        number: newPersonNumber,
+      })
+      return person.save().then(() => {
+        console.log('Added', newPersonName, newPersonNumber, 'to phonebook')
+      })
+    }
 
-        return Person.find({}).then(result => {
-            console.log('Phonebook:')
-            result.forEach(person => {
-                console.log(person.name, person.number)
-            })
-        })
+    return Person.find({}).then(result => {
+      console.log('Phonebook:')
+      result.forEach(person => {
+        console.log(person.name, person.number)
+      })
+    })
 
-    })
-    .then(() => {
-        return mongoose.connection.close()
-    })
-    .catch((err) => console.log(err))
+  })
+  .then(() => {
+    return mongoose.connection.close()
+  })
+  .catch((err) => console.log(err))
