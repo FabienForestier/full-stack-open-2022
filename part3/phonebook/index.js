@@ -63,10 +63,14 @@ app.get('/api/persons/:id', (request, response) => {
 });
 
 app.delete('/api/persons/:id', (request, response) => {
-    const personId = Number(request.params.id);
+    const personId = request.params.id;
 
-    persons = persons.filter((person) => person.id !== personId);
-    return response.status(204).end();
+    Person.findByIdAndRemove(personId).then(note => {
+        response.status(204).end()
+    }).catch(error => {
+        console.log(error)
+        response.status(400).send({ error: 'malformed id' })
+    })
 });
 
 app.post('/api/persons/', (request, response) => {

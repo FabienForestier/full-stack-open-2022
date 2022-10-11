@@ -10,7 +10,8 @@
     "build:ui": "rm -rf frontend-build && cd ../../part2/phonebook/ && npm run build && cp -R build ../../part3/phonebook/frontend-build",
     "deploy": "fly deploy",
     "deploy:full": "npm run build:ui && npm run deploy",
-    "logs:prod": "fly logs"
+    "logs:prod": "fly logs",
+    "open": "fly open"
   },
   "author": "Fabien FORESTIER",
   "license": "ISC",
