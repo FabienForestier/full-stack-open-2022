@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Having fun",
+  "author": "Funny guy",
+  "url": "https://havingfun.fr",
+  "likes": 1
+}
