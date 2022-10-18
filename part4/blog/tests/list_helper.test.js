@@ -98,3 +98,19 @@ describe('favorite blog', () => {
     expect(result).toBe(undefined)
   })
 })
+
+describe('most blog',() => {
+  test('return the author that wrote the most blogs with the number of written blogs', () => {
+    const authorWithMostBlogs = {
+      author: 'Robert C. Martin',
+      blogs: 3
+    }
+    const result = listHelper.mostBlogs(blogs)
+    expect(result).toEqual(authorWithMostBlogs)
+  })
+
+  test('of an empty list should return undefined', () => {
+    const result = listHelper.mostBlogs([])
+    expect(result).toBe(undefined)
+  })
+})
