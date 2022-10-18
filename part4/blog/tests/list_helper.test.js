@@ -50,6 +50,10 @@ const blogs = [
     __v: 0
   }
 ]
+const authorWithMostLikes = {
+  author: 'Edsger W. Dijkstra',
+  likes: 17
+}
 
 test('dummy returns one', () => {
   const blogs = []
@@ -109,8 +113,48 @@ describe('most blog',() => {
     expect(result).toEqual(authorWithMostBlogs)
   })
 
+  test('when two authors have the same number of blog returns the first one found', () => {
+    const authorWithMostBlogs = {
+      author: 'Edsger W. Dijkstra',
+      blogs: 3
+    }
+    const result = listHelper.mostBlogs([{
+      _id: '5a422aa71b54a676234d17az',
+      title: 'Fake blog',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://fake.com',
+      likes: 5,
+      __v: 0
+    }, ...blogs])
+    expect(result).toEqual(authorWithMostBlogs)
+  })
+
   test('of an empty list should return undefined', () => {
     const result = listHelper.mostBlogs([])
+    expect(result).toBe(undefined)
+  })
+})
+
+describe('most likes',() => {
+  test('return the author that has the most likes across all its blogs', () => {
+    const result = listHelper.mostLikes(blogs)
+    expect(result).toEqual(authorWithMostLikes)
+  })
+
+  test('when two authors have the same number of likes returns the first one found', () => {
+    const result = listHelper.mostLikes([...blogs,{
+      _id: '5a422bc61b54a676234d17ze',
+      title: 'Fake',
+      author: 'Robert C. Martin',
+      url: 'http://fake.com',
+      likes: 5,
+      __v: 0
+    }])
+    expect(result).toEqual(authorWithMostLikes)
+  })
+
+  test('of an empty list should return undefined', () => {
+    const result = listHelper.mostLikes([])
     expect(result).toBe(undefined)
   })
 })
