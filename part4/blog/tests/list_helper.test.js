@@ -74,3 +74,27 @@ describe('total likes', () => {
     expect(result).toBe(36)
   })
 })
+
+describe('favorite blog', () => {
+  test('of a list of blogs equals to the blog that has more likes', () => {
+    const result = listHelper.favoriteBlog(blogs)
+    expect(result).toEqual(blogs[2])
+  })
+
+  test('of a list of blogs with more than one blog having the max number of likes equals to the first blog found with the most number of likes', () => {
+    const result = listHelper.favoriteBlog([...blogs, {
+      _id: '5a422b3a1b54a676234d1a4r',
+      title: 'Fake blog',
+      author: 'James Bond',
+      url: 'http://www.james.bond.uk',
+      likes: 12,
+      __v: 0
+    }])
+    expect(result).toEqual(blogs[2])
+  })
+
+  test('of an empty list should return undefined', () => {
+    const result = listHelper.favoriteBlog([])
+    expect(result).toBe(undefined)
+  })
+})
