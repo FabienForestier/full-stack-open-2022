@@ -3,30 +3,45 @@ const supertest = require('supertest')
 const Blog = require('../models/blog')
 const helper =  require('./test_helper')
 const app = require('../app')
+const User = require('../models/user')
+const bcrypt = require('bcrypt')
 
 const api = supertest(app)
+let user
 
 beforeEach(async () => {
+  await User.deleteMany({})
   await Blog.deleteMany({})
-  await Blog.insertMany(helper.initialBlogs)
+
+  const password = 'sekret'
+  const passwordHash = await bcrypt.hash(password, 10)
+  const newUser = new User({ username: 'root', passwordHash })
+
+  const savedUser = await newUser.save()
+  await Blog.insertMany(helper.initialBlogs.map((blog) => ({ ...blog, user: savedUser._id })))
+  const response = await api
+    .post('/api/login')
+    .send({ username: newUser.username, password })
+  user = { token: response.body.token, id: savedUser._id }
 })
 
 describe('when there is initially some blogs saved', () => {
   test('blogs are returned as json', async () => {
     await api
       .get('/api/blogs')
+      .set({ Authorization: `Bearer ${user.token}` })
       .expect(200)
       .expect('Content-Type', /application\/json/)
   })
 
   test('all blogs are returned', async () => {
-    const response = await api.get('/api/blogs')
+    const response = await api.get('/api/blogs').set({ Authorization: `Bearer ${user.token}` })
 
     expect(response.body).toHaveLength(helper.initialBlogs.length)
   })
 
   test('a specific blog is within the returned blogs', async () => {
-    const response = await api.get('/api/blogs')
+    const response = await api.get('/api/blogs').set({ Authorization: `Bearer ${user.token}` })
 
     const contents = response.body.map(r => r.title)
 
@@ -36,7 +51,7 @@ describe('when there is initially some blogs saved', () => {
   })
 
   test('blogs have a unique identifier property called id', async () => {
-    const response = await api.get('/api/blogs')
+    const response = await api.get('/api/blogs').set({ Authorization: `Bearer ${user.token}` })
 
     response.body.forEach((blog) => {
       expect(blog.id).toBeDefined()
@@ -55,6 +70,7 @@ describe('addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set({ Authorization: `Bearer ${user.token}` })
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -62,7 +78,7 @@ describe('addition of a new blog', () => {
     const blogsAtEnd = await helper.blogsInDb()
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
 
-    expect(blogsAtEnd).toContainEqual({ id: expect.any(String), ...newBlog })
+    expect(blogsAtEnd).toContainEqual({ id: expect.any(String), ...newBlog, user: user.id.toString() })
   })
 
   test('without likes provided should default its likes to 0', async () => {
@@ -74,11 +90,27 @@ describe('addition of a new blog', () => {
 
     const result = await api
       .post('/api/blogs')
+      .set({ Authorization: `Bearer ${user.token}` })
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
     expect(result.body.likes).toBe(0)
+  })
+
+  test('fails if no valid token is provided', async () => {
+    const newBlog ={
+      title: 'Fake blog',
+      author: 'Fabien',
+      url: 'https://fakeblog.fr',
+      likes: 2
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
   })
 
   test('should fail if no title is provided', async () => {
@@ -89,6 +121,7 @@ describe('addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set({ Authorization: `Bearer ${user.token}` })
       .send(newBlog)
       .expect(400)
   })
@@ -101,6 +134,7 @@ describe('addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set({ Authorization: `Bearer ${user.token}` })
       .send(newBlog)
       .expect(400)
   })
@@ -113,6 +147,7 @@ describe('deletion of a note', () => {
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set({ Authorization: `Bearer ${user.token}` })
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -135,6 +170,7 @@ describe('update of a note', () => {
 
     await api
       .put(`/api/blogs/${blogToUpdate.id}`)
+      .set({ Authorization: `Bearer ${user.token}` })
       .send({ likes: newLikes })
       .expect(200)
 
@@ -150,6 +186,7 @@ describe('update of a note', () => {
 
     const result = await api
       .put(`/api/blogs/${blogToUpdate.id}`)
+      .set({ Authorization: `Bearer ${user.token}` })
       .send({ likes: newLikes })
 
     expect(result.body).toEqual({ ...blogsAtStart[0], likes: newLikes })
@@ -161,6 +198,7 @@ describe('update of a note', () => {
 
     await api
       .put(`/api/blogs/${blogToUpdate.id}`)
+      .set({ Authorization: `Bearer ${user.token}` })
       .send({ })
       .expect(400)
   })
