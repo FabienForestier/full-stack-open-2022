@@ -127,6 +127,45 @@ describe('deletion of a note', () => {
   })
 })
 
+describe('update of a note', () => {
+  const newLikes = 10
+  test('succeeds with status code 200 if id is valid and likes provided', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send({ likes: newLikes })
+      .expect(200)
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+    expect(blogsAtEnd).toContainEqual({ ...blogsAtStart[0], likes: newLikes })
+  })
+
+  test('return the updated blog', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+
+    const result = await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send({ likes: newLikes })
+
+    expect(result.body).toEqual({ ...blogsAtStart[0], likes: newLikes })
+  })
+
+  test('fails with 400 if likes is not provided', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send({ })
+      .expect(400)
+  })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })

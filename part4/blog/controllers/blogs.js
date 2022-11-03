@@ -19,4 +19,19 @@ blogRouter.delete('/:id', async (request, response) => {
   response.status(204).end()
 })
 
+blogRouter.put('/:id', async (request, response) => {
+  const blogId = request.params.id
+
+  if (!request.body.likes) {
+    return response.status(400).send({ error: 'Invalid blog value, missing likes' })
+  }
+
+  const propertiesToUpdate = {
+    likes: request.body.likes,
+  }
+
+  const updatedPerson =  await Blog.findByIdAndUpdate(blogId, propertiesToUpdate, { new: true, runValidators: true, context: 'query' })
+  response.json(updatedPerson)
+})
+
 module.exports = blogRouter
