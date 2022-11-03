@@ -3,14 +3,13 @@ const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
-
 blogRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   response.json(blogs)
 })
 
 blogRouter.post('/', async (request, response) => {
-  const token = getTokenFrom(request)
+  const token = request.token
   if (!token) {
     return response.status(401).json({ error: 'token missing' })
   }
@@ -47,13 +46,5 @@ blogRouter.put('/:id', async (request, response) => {
   const updatedPerson =  await Blog.findByIdAndUpdate(blogId, propertiesToUpdate, { new: true, runValidators: true, context: 'query' })
   response.json(updatedPerson)
 })
-
-const getTokenFrom = request => {
-  const authorization = request.get('Authorization')
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7)
-  }
-  return null
-}
 
 module.exports = blogRouter
