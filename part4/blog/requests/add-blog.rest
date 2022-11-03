@@ -1,9 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Impib25kIiwiaWQiOiI2MzYzZTdhYmQ5OWM5ZDViYmQ0OTNiZmQiLCJpYXQiOjE2Njc0OTU0MzIsImV4cCI6MTY2NzQ5OTAzMn0.W9YHynSuhfduk05hMOYr2hwp8EKp2wzN6JKO7sTPcY4
 
 {
-  "title": "Having fun",
-  "author": "Funny guy",
-  "url": "https://havingfun.fr",
+  "title": "Game of Thrones",
+  "author": "Martin",
+  "url": "https://got.fr",
   "likes": 1
 }
