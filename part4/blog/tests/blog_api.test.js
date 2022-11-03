@@ -72,6 +72,30 @@ test('a new blog likes should default to 0 if no value is provided', async () =>
   expect(result.body.likes).toBe(0)
 })
 
+test('should not create a blog without a title', async () => {
+  const newBlog ={
+    author: 'Fabien',
+    url: 'https://fakeblog.fr',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+})
+
+test('should not create a blog without a url', async () => {
+  const newBlog ={
+    title: 'fakeBlog',
+    author: 'Fabien',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
