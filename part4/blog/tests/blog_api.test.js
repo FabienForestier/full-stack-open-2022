@@ -56,6 +56,22 @@ test('a valid blog can be added', async () => {
   expect(blogsAtEnd).toContainEqual({ id: expect.any(String), ...newBlog })
 })
 
+test('a new blog likes should default to 0 if no value is provided', async () => {
+  const newBlog ={
+    title: 'Fake blog',
+    author: 'Fabien',
+    url: 'https://fakeblog.fr',
+  }
+
+  const result = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  expect(result.body.likes).toBe(0)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
