@@ -41,7 +41,7 @@ const tokenExtractor = (request, response, next) => {
   next()
 }
 
-const validTokenRequired = (request, response, next) => {
+const userExtractor = (request, response, next) => {
   const token = request.token
   if (!token) {
     return response.status(401).json({ error: 'token missing' })
@@ -51,8 +51,7 @@ const validTokenRequired = (request, response, next) => {
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'token invalid' })
   }
-  request.userId = decodedToken.id
-  request.username = decodedToken.username
+  request.user = { id: decodedToken.id, username: decodedToken.username }
   next()
 }
 
@@ -61,5 +60,5 @@ module.exports = {
   unknownEndpoint,
   errorHandler,
   tokenExtractor,
-  validTokenRequired
+  userExtractor
 }
