@@ -4,6 +4,10 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: [true, 'Username must be specified'], minLength: [3, 'Username must contain at least 3 characters'] },
   name: String,
   passwordHash: String,
+  blogs: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Blog'
+  }]
 })
 
 userSchema.set('toJSON', {
