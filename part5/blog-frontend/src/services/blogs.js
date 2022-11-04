@@ -14,7 +14,7 @@ const setToken = (userToken) => {
 };
 
 const getAll = async () => {
-  const response = await axios.get(baseUrl, getAuthHeaders(token));
+  const response = await axios.get(`${baseUrl}?sort=likes`, getAuthHeaders(token));
   return response.data;
 };
 
