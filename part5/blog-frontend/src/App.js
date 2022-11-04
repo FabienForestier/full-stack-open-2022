@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Blog from './components/Blog';
 import BlogForm from './components/BlogForm';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
+import Togglable from './components/Togglable';
 import UserInfo from './components/UserInfo';
 import authService from './services/auth';
 import blogService from './services/blogs';
@@ -16,6 +17,7 @@ function App() {
   const [blogAuthor, setBlogAuthor] = useState('');
   const [blogUrl, setBlogUrl] = useState('');
   const [notification, setNotification] = useState(null);
+  const blogFormRef = useRef();
 
   const displayMessage = (messageToDisplay, type) => {
     setNotification({ message: messageToDisplay, type });
@@ -41,16 +43,21 @@ function App() {
     authService.logout();
   };
 
+  const resetBlogForm = () => {
+    setBlogTitle('');
+    setBlogAuthor('');
+    setBlogUrl('');
+  };
+
   const addNewBlog = async (event) => {
     event.preventDefault();
     try {
       const newBlog = await blogService.create(
         { title: blogTitle, author: blogAuthor, url: blogUrl },
       );
+      blogFormRef.current.toggleVisibility();
       setBlogs(blogs.concat(newBlog));
-      setBlogTitle('');
-      setBlogAuthor('');
-      setBlogUrl('');
+      resetBlogForm();
       displayMessage(`A new blog ${newBlog.title} by ${newBlog.author} has been added`, 'success');
     } catch (error) {
       displayMessage('Failed to add the blog', 'error');
@@ -81,17 +88,20 @@ function App() {
       <div>
         <h2>blogs</h2>
         <UserInfo name={user.name} logout={logout} />
-        <h2>Create a new blog</h2>
         <Notification notification={notification} />
-        <BlogForm
-          title={blogTitle}
-          setTitle={setBlogTitle}
-          author={blogAuthor}
-          setAuthor={setBlogAuthor}
-          url={blogUrl}
-          setUrl={setBlogUrl}
-          addBlog={addNewBlog}
-        />
+        <Togglable label="Create a blog" handleCancel={resetBlogForm} ref={blogFormRef}>
+          <h2>Create a new blog</h2>
+          <BlogForm
+            title={blogTitle}
+            setTitle={setBlogTitle}
+            author={blogAuthor}
+            setAuthor={setBlogAuthor}
+            url={blogUrl}
+            setUrl={setBlogUrl}
+            addBlog={addNewBlog}
+          />
+        </Togglable>
+
         <h2>Your blogs</h2>
         {blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
       </div>
