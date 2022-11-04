@@ -49,8 +49,8 @@ function App() {
     try {
       const newBlog = await blogService.create(blog);
       blogFormToggleRef.current.toggleVisibility();
+      setBlogs(blogs.concat(newBlog));
       resetBlogForm();
-      blogFormRef.current.reset();
       displayMessage(`A new blog ${newBlog.title} by ${newBlog.author} has been added`, 'success');
     } catch (error) {
       displayMessage('Failed to add the blog', 'error');
