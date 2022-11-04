@@ -1,8 +1,27 @@
-function BlogForm({
-  title, author, setTitle, setAuthor, url, setUrl, addBlog,
-}) {
+import { forwardRef, useImperativeHandle, useState } from 'react';
+
+const BlogForm = forwardRef(({ addBlog }, refs) => {
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [url, setUrl] = useState('');
+
+  const reset = () => {
+    setTitle('');
+    setAuthor('');
+    setUrl('');
+  };
+
+  useImperativeHandle(refs, () => ({
+    reset,
+  }));
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+    addBlog({ title, author, url });
+    reset();
+  };
   return (
-    <form onSubmit={addBlog}>
+    <form onSubmit={onSubmit}>
       <div>
         Title
         <input
@@ -33,6 +52,6 @@ function BlogForm({
       <button type="submit">Add</button>
     </form>
   );
-}
+});
 
 export default BlogForm;

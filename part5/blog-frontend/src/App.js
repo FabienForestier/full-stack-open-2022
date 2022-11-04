@@ -13,10 +13,8 @@ function App() {
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(undefined);
   const [blogs, setBlogs] = useState([]);
-  const [blogTitle, setBlogTitle] = useState('');
-  const [blogAuthor, setBlogAuthor] = useState('');
-  const [blogUrl, setBlogUrl] = useState('');
   const [notification, setNotification] = useState(null);
+  const blogFormToggleRef = useRef();
   const blogFormRef = useRef();
 
   const displayMessage = (messageToDisplay, type) => {
@@ -44,20 +42,15 @@ function App() {
   };
 
   const resetBlogForm = () => {
-    setBlogTitle('');
-    setBlogAuthor('');
-    setBlogUrl('');
+    blogFormRef.current.reset();
   };
 
-  const addNewBlog = async (event) => {
-    event.preventDefault();
+  const addNewBlog = async (blog) => {
     try {
-      const newBlog = await blogService.create(
-        { title: blogTitle, author: blogAuthor, url: blogUrl },
-      );
-      blogFormRef.current.toggleVisibility();
-      setBlogs(blogs.concat(newBlog));
+      const newBlog = await blogService.create(blog);
+      blogFormToggleRef.current.toggleVisibility();
       resetBlogForm();
+      blogFormRef.current.reset();
       displayMessage(`A new blog ${newBlog.title} by ${newBlog.author} has been added`, 'success');
     } catch (error) {
       displayMessage('Failed to add the blog', 'error');
@@ -89,17 +82,9 @@ function App() {
         <h2>blogs</h2>
         <UserInfo name={user.name} logout={logout} />
         <Notification notification={notification} />
-        <Togglable label="Create a blog" handleCancel={resetBlogForm} ref={blogFormRef}>
+        <Togglable label="Create a blog" handleCancel={resetBlogForm} ref={blogFormToggleRef}>
           <h2>Create a new blog</h2>
-          <BlogForm
-            title={blogTitle}
-            setTitle={setBlogTitle}
-            author={blogAuthor}
-            setAuthor={setBlogAuthor}
-            url={blogUrl}
-            setUrl={setBlogUrl}
-            addBlog={addNewBlog}
-          />
+          <BlogForm addBlog={addNewBlog} ref={blogFormRef} />
         </Togglable>
 
         <h2>Your blogs</h2>
