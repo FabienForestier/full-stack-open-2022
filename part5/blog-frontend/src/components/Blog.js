@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function Blog({ blog }) {
+function Blog({ blog, handleLikeBlog }) {
   const [viewDetails, setViewDetails] = useState(false);
   const cardStyle = {
     boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
@@ -24,8 +24,10 @@ function Blog({ blog }) {
           <button type="button" onClick={() => setViewDetails(false)}>Hide</button>
         </div>
         <div>
+          Likes
+          {' '}
           {blog.likes}
-          <button type="button">Like</button>
+          <button type="button" onClick={() => handleLikeBlog({ id: blog.id, likes: blog.likes + 1 })}>Like</button>
         </div>
         <div>
           {blog.author}

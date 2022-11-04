@@ -39,6 +39,7 @@ function App() {
   const logout = () => {
     setUser(undefined);
     authService.logout();
+    blogService.setToken(undefined);
   };
 
   const resetBlogForm = () => {
@@ -57,9 +58,30 @@ function App() {
     }
   };
 
+  const handleLikeBlog = async (likedBlog) => {
+    try {
+      await blogService.update(likedBlog);
+      setBlogs((prevState) => prevState.map((blog) => {
+        if (blog.id === likedBlog.id) {
+          return { ...blog, ...likedBlog };
+        }
+        return blog;
+      }));
+    } catch (error) {
+      displayMessage('Failed to like the blog', 'error');
+    }
+  };
+
   const loadBlogs = async () => {
-    const blogsFromBackend = await blogService.getAll();
-    setBlogs(blogsFromBackend);
+    try {
+      const blogsFromBackend = await blogService.getAll();
+      setBlogs(blogsFromBackend);
+    } catch (error) {
+      console.log(error);
+      if (error.request.status === 401) {
+        logout();
+      }
+    }
   };
 
   useEffect(() => {
@@ -88,7 +110,7 @@ function App() {
         </Togglable>
 
         <h2>Your blogs</h2>
-        {blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
+        {blogs.map((blog) => <Blog key={blog.id} blog={blog} handleLikeBlog={handleLikeBlog} />)}
       </div>
     );
   }
