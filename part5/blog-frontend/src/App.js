@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import Blog from './components/Blog';
+import BlogForm from './components/BlogForm';
 import LoginForm from './components/LoginForm';
+import Notification from './components/Notification';
 import UserInfo from './components/UserInfo';
 import authService from './services/auth';
 import blogService from './services/blogs';
@@ -10,12 +12,15 @@ function App() {
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(undefined);
   const [blogs, setBlogs] = useState([]);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [blogTitle, setBlogTitle] = useState('');
+  const [blogAuthor, setBlogAuthor] = useState('');
+  const [blogUrl, setBlogUrl] = useState('');
+  const [notification, setNotification] = useState(null);
 
-  const displayError = (message) => {
-    setErrorMessage(message);
+  const displayMessage = (messageToDisplay, type) => {
+    setNotification({ message: messageToDisplay, type });
     setTimeout(() => {
-      setErrorMessage(null);
+      setNotification(null);
     }, 5000);
   };
 
@@ -27,13 +32,34 @@ function App() {
       setUsername('');
       setPassword('');
     } catch (exception) {
-      displayError('Wrong credentials');
+      displayMessage('Wrong credentials', 'error');
     }
   };
 
   const logout = () => {
     setUser(undefined);
     authService.logout();
+  };
+
+  const addNewBlog = async (event) => {
+    event.preventDefault();
+    try {
+      const newBlog = await blogService.create(
+        { title: blogTitle, author: blogAuthor, url: blogUrl },
+      );
+      setBlogs(blogs.concat(newBlog));
+      setBlogTitle('');
+      setBlogAuthor('');
+      setBlogUrl('');
+      displayMessage(`A new blog ${newBlog.title} by ${newBlog.author} has been added`, 'success');
+    } catch (error) {
+      displayMessage('Failed to add the blog', 'error');
+    }
+  };
+
+  const loadBlogs = async () => {
+    const blogsFromBackend = await blogService.getAll();
+    setBlogs(blogsFromBackend);
   };
 
   useEffect(() => {
@@ -46,7 +72,7 @@ function App() {
   useEffect(() => {
     if (user) {
       blogService.setToken(user.token);
-      blogService.getAll().then((blogsFromBackend) => setBlogs(blogsFromBackend));
+      loadBlogs();
     }
   }, [user]);
 
@@ -55,6 +81,18 @@ function App() {
       <div>
         <h2>blogs</h2>
         <UserInfo name={user.name} logout={logout} />
+        <h2>Create a new blog</h2>
+        <Notification notification={notification} />
+        <BlogForm
+          title={blogTitle}
+          setTitle={setBlogTitle}
+          author={blogAuthor}
+          setAuthor={setBlogAuthor}
+          url={blogUrl}
+          setUrl={setBlogUrl}
+          addBlog={addNewBlog}
+        />
+        <h2>Your blogs</h2>
         {blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
       </div>
     );
@@ -63,6 +101,7 @@ function App() {
   return (
     <div>
       <h2>Log in to the application</h2>
+      <Notification notification={notification} />
       <LoginForm
         username={username}
         setUsername={setUsername}
@@ -70,7 +109,7 @@ function App() {
         setPassword={setPassword}
         handleLogin={handleLogin}
       />
-      {errorMessage}
+
     </div>
   );
 }
