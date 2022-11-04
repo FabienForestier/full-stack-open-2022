@@ -66,9 +66,26 @@ function App() {
           return { ...blog, ...likedBlog };
         }
         return blog;
-      }));
+      }).sort((prev, current) => current.likes - prev.likes));
     } catch (error) {
       displayMessage('Failed to like the blog', 'error');
+    }
+  };
+
+  const handleRemoveBlog = async (blogToDelete) => {
+    if (window.confirm(`Are you sure you want to delete ${blogToDelete.title} by ${blogToDelete.author}`) === false) {
+      return;
+    }
+    try {
+      await blogService.remove(blogToDelete.id);
+      setBlogs((prevState) => prevState.reduce((processedBlogs, blog) => {
+        if (blog.id === blogToDelete.id) {
+          return processedBlogs;
+        }
+        return processedBlogs.concat(blog);
+      }, []));
+    } catch (error) {
+      displayMessage('Failed to delete the blog', 'error');
     }
   };
 
@@ -77,7 +94,6 @@ function App() {
       const blogsFromBackend = await blogService.getAll();
       setBlogs(blogsFromBackend);
     } catch (error) {
-      console.log(error);
       if (error.request.status === 401) {
         logout();
       }
@@ -110,7 +126,16 @@ function App() {
         </Togglable>
 
         <h2>Your blogs</h2>
-        {blogs.map((blog) => <Blog key={blog.id} blog={blog} handleLikeBlog={handleLikeBlog} />)}
+        {user.username}
+        {blogs.map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            showDeleteButton={blog.user.username === user.username}
+            handleLikeBlog={handleLikeBlog}
+            handleRemoveBlog={handleRemoveBlog}
+          />
+        ))}
       </div>
     );
   }

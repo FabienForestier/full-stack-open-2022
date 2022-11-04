@@ -14,7 +14,6 @@ const blogSchema = new mongoose.Schema({
 blogSchema.set('toJSON', {
   transform: (_, blog) => {
     blog.id = blog._id.toString()
-    blog.user = blog.user.toString()
     delete blog._id
     delete blog.__v
   }

@@ -68,7 +68,7 @@ describe('addition of a new blog', () => {
       likes: 2
     }
 
-    await api
+    const response = await api
       .post('/api/blogs')
       .set({ Authorization: `Bearer ${user.token}` })
       .send(newBlog)
@@ -78,7 +78,7 @@ describe('addition of a new blog', () => {
     const blogsAtEnd = await helper.blogsInDb()
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
 
-    expect(blogsAtEnd).toContainEqual({ id: expect.any(String), ...newBlog, user: user.id.toString() })
+    expect(blogsAtEnd).toContainEqual(response.body)
   })
 
   test('without likes provided should default its likes to 0', async () => {

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 
-function Blog({ blog, handleLikeBlog }) {
+function Blog({
+  blog, showDeleteButton, handleLikeBlog, handleRemoveBlog,
+}) {
   const [viewDetails, setViewDetails] = useState(false);
   const cardStyle = {
     boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
@@ -8,6 +10,11 @@ function Blog({ blog, handleLikeBlog }) {
     padding: '8px',
 
   };
+  const deleteButtonStyle = {
+    color: 'white',
+    backgroundColor: 'red',
+  };
+
   return !viewDetails
     ? (
       <div style={cardStyle}>
@@ -31,6 +38,9 @@ function Blog({ blog, handleLikeBlog }) {
         </div>
         <div>
           {blog.author}
+        </div>
+        <div>
+          { showDeleteButton && <button style={deleteButtonStyle} type="button" onClick={() => handleRemoveBlog(blog)}>Delete</button>}
         </div>
       </div>
     );
