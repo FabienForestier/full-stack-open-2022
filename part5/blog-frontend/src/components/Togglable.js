@@ -23,7 +23,7 @@ const Togglable = forwardRef(({ label, handleCancel, children }, refs) => {
     </div>
   );
 });
-
+Togglable.displayName = 'Togglable';
 Togglable.propTypes = {
   label: PropTypes.string.isRequired,
   handleCancel: PropTypes.func.isRequired,
