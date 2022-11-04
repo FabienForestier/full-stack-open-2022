@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { forwardRef, useImperativeHandle, useState } from 'react';
 
 const Togglable = forwardRef(({ label, handleCancel, children }, refs) => {
@@ -22,5 +23,10 @@ const Togglable = forwardRef(({ label, handleCancel, children }, refs) => {
     </div>
   );
 });
+
+Togglable.propTypes = {
+  label: PropTypes.string.isRequired,
+  handleCancel: PropTypes.func.isRequired,
+};
 
 export default Togglable;
