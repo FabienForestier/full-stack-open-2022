@@ -21,7 +21,7 @@ function Blog({
         {blog.title}
         {' '}
         {blog.author}
-        <button type="button" onClick={() => setViewDetails(true)}>View</button>
+        <button type="button" className="view-details-button" onClick={() => setViewDetails(true)}>View</button>
       </div>
     )
     : (
@@ -30,7 +30,7 @@ function Blog({
           {blog.title}
           <button type="button" onClick={() => setViewDetails(false)}>Hide</button>
         </div>
-        <div className="number-of-likes">
+        <div data-testid="number-of-likes">
           Likes
           {' '}
           {blog.likes}
