@@ -5,6 +5,7 @@ import React from 'react';
 import Blog from './Blog';
 
 let container;
+let likeHandler;
 const blog = {
   id: 1,
   title: 'Blog 1',
@@ -13,7 +14,8 @@ const blog = {
 };
 
 beforeEach(() => {
-  const view = render(<Blog blog={blog} />);
+  likeHandler = jest.fn();
+  const view = render(<Blog blog={blog} handleLikeBlog={likeHandler} />);
   container = view.container;
 });
 
@@ -28,10 +30,21 @@ test('renders the blog title and author but not the number of likes by default',
 
 test('should display the number of likes when the show details button has been clicked', async () => {
   const user = userEvent.setup();
-  const button = container.querySelector('.view-details-button');
+  const button = screen.getByTestId('view-details-button');
   await user.click(button);
 
   const likes = screen.getByTestId('number-of-likes');
   expect(likes).toBeDefined();
   expect(likes.textContent.includes(blog.likes)).toBe(true);
+});
+
+test('should call like handler as much time as like button is clicked', async () => {
+  const user = userEvent.setup();
+  const button = screen.getByTestId('view-details-button');
+  await user.click(button);
+
+  const likeButton = screen.getByTestId('like-button');
+  await user.click(likeButton);
+  await user.click(likeButton);
+  expect(likeHandler).toHaveBeenCalledTimes(2);
 });
