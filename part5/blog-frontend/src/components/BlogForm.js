@@ -26,6 +26,7 @@ const BlogForm = forwardRef(({ addBlog }, refs) => {
       <div>
         Title
         <input
+          data-testid="title-input"
           type="text"
           name="title"
           value={title}
@@ -35,6 +36,7 @@ const BlogForm = forwardRef(({ addBlog }, refs) => {
       <div>
         Author
         <input
+          data-testid="author-input"
           type="text"
           name="author"
           value={author}
@@ -44,13 +46,14 @@ const BlogForm = forwardRef(({ addBlog }, refs) => {
       <div>
         Url
         <input
+          data-testid="url-input"
           type="text"
           name="url"
           value={url}
           onChange={({ target }) => setUrl(target.value)}
         />
       </div>
-      <button type="submit">Add</button>
+      <button data-testid="send-button" type="submit">Add</button>
     </form>
   );
 });
