@@ -30,7 +30,7 @@ function Blog({
           {blog.title}
           <button type="button" onClick={() => setViewDetails(false)}>Hide</button>
         </div>
-        <div>
+        <div className="number-of-likes">
           Likes
           {' '}
           {blog.likes}
