@@ -28,7 +28,7 @@ function Blog({
       <div data-cy="blog-summary-details" style={cardStyle}>
         <div>
           {blog.title}
-          <button type="button" onClick={() => setViewDetails(false)}>Hide</button>
+          <button data-cy="hide-details-button" type="button" onClick={() => setViewDetails(false)}>Hide</button>
         </div>
         <div data-testid="number-of-likes">
           Likes
