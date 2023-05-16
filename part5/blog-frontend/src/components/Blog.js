@@ -21,11 +21,11 @@ function Blog({
         {blog.title}
         {' '}
         {blog.author}
-        <button type="button" data-testid="view-details-button" onClick={() => setViewDetails(true)}>View</button>
+        <button type="button" data-cy="view-details-button" data-testid="view-details-button" onClick={() => setViewDetails(true)}>View</button>
       </div>
     )
     : (
-      <div style={cardStyle}>
+      <div data-cy="blog-summary-details" style={cardStyle}>
         <div>
           {blog.title}
           <button type="button" onClick={() => setViewDetails(false)}>Hide</button>
@@ -33,8 +33,8 @@ function Blog({
         <div data-testid="number-of-likes">
           Likes
           {' '}
-          {blog.likes}
-          <button type="button" data-testid="like-button" onClick={() => handleLikeBlog({ id: blog.id, likes: blog.likes + 1 })}>Like</button>
+          <span data-cy="blog-number-of-likes">{blog.likes}</span>
+          <button type="button" data-cy="like-button" data-testid="like-button" onClick={() => handleLikeBlog({ id: blog.id, likes: blog.likes + 1 })}>Like</button>
         </div>
         <div>
           {blog.author}

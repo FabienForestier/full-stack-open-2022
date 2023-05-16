@@ -59,5 +59,21 @@ describe('Blog app', () => {
       cy.get('@urlInput').should('not.be.visible');
       cy.get('[data-cy=blog-summary]').contains(`${blog.title} ${blog.author}`);
     });
+
+    describe('When a blog has been created', () => {
+      beforeEach(() => {
+        cy.createBlog({ blog });
+      });
+      it('it can be liked', () => {
+        cy.get('[data-cy=blog-summary]').contains(blog.title).find('[data-cy=view-details-button]')
+          .click();
+        cy.get('[data-cy=blog-summary-details]').contains(blog.title).parent().as('blogDetails')
+          .find('[data-cy=blog-number-of-likes]')
+          .as('numberOfLikes')
+          .should('have.text', 0);
+        cy.get('@blogDetails').find('[data-cy=like-button]').click();
+        cy.get('@numberOfLikes').should('have.text', 1);
+      });
+    });
   });
 });
