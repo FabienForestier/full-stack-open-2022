@@ -120,7 +120,7 @@ function App() {
         <h2>blogs</h2>
         <UserInfo name={user.name} logout={logout} />
         <Notification notification={notification} />
-        <Togglable label="Create a blog" handleCancel={resetBlogForm} ref={blogFormToggleRef}>
+        <Togglable dataCy="create-blog-button" label="Create a blog" handleCancel={resetBlogForm} ref={blogFormToggleRef}>
           <h2>Create a new blog</h2>
           <BlogForm addBlog={addNewBlog} ref={blogFormRef} />
         </Togglable>

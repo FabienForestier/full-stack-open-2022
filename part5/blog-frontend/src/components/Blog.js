@@ -17,7 +17,7 @@ function Blog({
 
   return !viewDetails
     ? (
-      <div style={cardStyle}>
+      <div data-cy="blog-summary" style={cardStyle}>
         {blog.title}
         {' '}
         {blog.author}

@@ -4,12 +4,17 @@ const user = {
   password: 'superman',
 };
 
+const blog = {
+  title: 'NBA',
+  author: 'Lebron James',
+  url: 'https://nba.com',
+};
+
 describe('Blog app', () => {
   beforeEach(() => {
-    cy.request('POST', 'http://localhost:3003/api/testing/reset');
-
-    cy.request('POST', 'http://localhost:3003/api/users/', user);
-    cy.visit('http://localhost:3000');
+    cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`);
+    cy.request('POST', `${Cypress.env('BACKEND')}/users/`, user);
+    cy.visit('');
   });
 
   it('Login form is shown', () => {
@@ -34,6 +39,25 @@ describe('Blog app', () => {
       cy.get('@usernameInput');
       cy.get('@passwordInput');
       cy.get("[data-cy='notification']").should('have.css', 'color', 'rgb(255, 0, 0)');
+    });
+  });
+
+  describe('When logged in', () => {
+    beforeEach(() => {
+      cy.login({ username: user.username, password: user.password });
+    });
+
+    it('A blog can be created', () => {
+      cy.get('[data-cy=create-blog-button] [data-cy="toggle-display-button"]').click();
+      cy.get('[data-cy=title-input]').as('titleInput').type(blog.title);
+      cy.get('[data-cy=author-input]').as('authorInput').type(blog.author);
+      cy.get('[data-cy=url-input]').as('urlInput').type(blog.url);
+      cy.get('[data-cy=send-button]').click();
+      cy.get("[data-cy='notification']").should('have.css', 'color', 'rgb(0, 128, 0)');
+      cy.get('@titleInput').should('not.be.visible');
+      cy.get('@authorInput').should('not.be.visible');
+      cy.get('@urlInput').should('not.be.visible');
+      cy.get('[data-cy=blog-summary]').contains(`${blog.title} ${blog.author}`);
     });
   });
 });

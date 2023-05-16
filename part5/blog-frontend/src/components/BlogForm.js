@@ -26,6 +26,7 @@ const BlogForm = forwardRef(({ addBlog }, refs) => {
       <div>
         Title
         <input
+          data-cy="title-input"
           data-testid="title-input"
           type="text"
           name="title"
@@ -36,6 +37,7 @@ const BlogForm = forwardRef(({ addBlog }, refs) => {
       <div>
         Author
         <input
+          data-cy="author-input"
           data-testid="author-input"
           type="text"
           name="author"
@@ -46,6 +48,7 @@ const BlogForm = forwardRef(({ addBlog }, refs) => {
       <div>
         Url
         <input
+          data-cy="url-input"
           data-testid="url-input"
           type="text"
           name="url"
@@ -53,7 +56,7 @@ const BlogForm = forwardRef(({ addBlog }, refs) => {
           onChange={({ target }) => setUrl(target.value)}
         />
       </div>
-      <button data-testid="send-button" type="submit">Add</button>
+      <button data-cy="send-button" data-testid="send-button" type="submit">Add</button>
     </form>
   );
 });
@@ -61,5 +64,6 @@ const BlogForm = forwardRef(({ addBlog }, refs) => {
 BlogForm.propTypes = {
   addBlog: PropTypes.func.isRequired,
 };
+BlogForm.displayName = 'BlogForm';
 
 export default BlogForm;
