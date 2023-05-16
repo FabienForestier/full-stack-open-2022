@@ -40,7 +40,7 @@ function Blog({
           {blog.author}
         </div>
         <div>
-          { showDeleteButton && <button style={deleteButtonStyle} type="button" onClick={() => handleRemoveBlog(blog)}>Delete</button>}
+          { showDeleteButton && <button data-cy="delete-button" style={deleteButtonStyle} type="button" onClick={() => handleRemoveBlog(blog)}>Delete</button>}
         </div>
       </div>
     );

@@ -74,6 +74,14 @@ describe('Blog app', () => {
         cy.get('@blogDetails').find('[data-cy=like-button]').click();
         cy.get('@numberOfLikes').should('have.text', 1);
       });
+
+      it('Can be deleted by the user that created it', () => {
+        cy.get('[data-cy=blog-summary]').contains(blog.title).find('[data-cy=view-details-button]')
+          .click();
+        cy.get('[data-cy=blog-summary-details]').contains(blog.title).parent().find('[data-cy=delete-button]')
+          .click();
+        cy.get('[data-cy=blog-summary]').should('not.exist');
+      });
     });
   });
 });
