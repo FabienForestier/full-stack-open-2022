@@ -82,6 +82,30 @@ describe('Blog app', () => {
           .click();
         cy.get('[data-cy=blog-summary]').should('not.exist');
       });
+
+      it('Cannot be deleted by a user that is not the owner', () => {
+        const lois = {
+          name: 'Lois',
+          username: 'lois',
+          password: 'girlfriend',
+        };
+        const cryptoBlog = {
+          title: 'Crypto',
+          author: 'lex',
+          url: 'https://crypto.com',
+        };
+        cy.request('POST', `${Cypress.env('BACKEND')}/users/`, lois);
+        cy.login({ username: lois.username, password: lois.password });
+        cy.createBlog({
+          blog: cryptoBlog,
+        });
+        cy.visit('');
+        cy.login({ username: user.username, password: user.password });
+        cy.get('[data-cy=blog-summary]').contains(cryptoBlog.title).find('[data-cy=view-details-button]')
+          .click();
+        cy.get('[data-cy=blog-summary-details]').contains(cryptoBlog.title).parent().find('[data-cy=delete-button]')
+          .should('not.exist');
+      });
     });
   });
 });
