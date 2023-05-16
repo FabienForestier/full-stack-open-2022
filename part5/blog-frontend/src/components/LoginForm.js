@@ -6,6 +6,7 @@ function LoginForm({
       <div>
         Username
         <input
+          data-cy="username-input"
           type="text"
           name="username"
           value={username}
@@ -15,13 +16,14 @@ function LoginForm({
       <div>
         Password
         <input
+          data-cy="password-input"
           type="password"
           name="password"
           value={password}
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type="submit">Login</button>
+      <button data-cy="login-button" type="submit">Login</button>
     </form>
   );
 }
