@@ -32,8 +32,10 @@ const reducer = (state = initialState, action) => {
       const newState = [...state];
       newState.splice(index, 1, {...newState[index], votes: newState[index].votes + 1})
       return newState;
-      default:
-        return state;
+    case 'CREATE_ANECDOTE':
+      return [...state, action.payload.anecdote];
+    default:
+      return state;
   }
 }
 
@@ -42,6 +44,19 @@ export const vote = (anecdoteId) => {
     type: 'VOTE',
     payload: {
       anecdoteId
+    }
+  }
+}
+
+export const newAnecdote = (anecdoteText) => {
+  return {
+    type: 'CREATE_ANECDOTE',
+    payload: {
+      anecdote: {
+        content: anecdoteText,
+        id: getId(),
+        votes: 0
+      }
     }
   }
 }
