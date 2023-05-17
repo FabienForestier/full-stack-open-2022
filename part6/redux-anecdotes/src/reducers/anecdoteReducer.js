@@ -31,7 +31,7 @@ const reducer = (state = initialState, action) => {
       }
       const newState = [...state];
       newState.splice(index, 1, {...newState[index], votes: newState[index].votes + 1})
-      return newState;
+      return newState.sort((a, b) => b.votes - a.votes)
     case 'CREATE_ANECDOTE':
       return [...state, action.payload.anecdote];
     default:
