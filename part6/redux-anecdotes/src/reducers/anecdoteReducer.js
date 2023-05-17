@@ -22,8 +22,28 @@ const initialState = anecdotesAtStart.map(asObject)
 const reducer = (state = initialState, action) => {
   console.log('state now: ', state)
   console.log('action', action)
+  switch(action.type) {
+    case 'VOTE':
+      const index = state.findIndex((anecdote) => anecdote.id === action.payload.anecdoteId);
+      console.log('Index found', index)
+      if(index === -1) {
+        return state;
+      }
+      const newState = [...state];
+      newState.splice(index, 1, {...newState[index], votes: newState[index].votes + 1})
+      return newState;
+      default:
+        return state;
+  }
+}
 
-  return state
+export const vote = (anecdoteId) => {
+  return {
+    type: 'VOTE',
+    payload: {
+      anecdoteId
+    }
+  }
 }
 
 export default reducer
