@@ -7,5 +7,10 @@ const getAll = async () => {
   return response.data
 }
 
-const methods = { getAll };
+const save = async (anecdoteContent) => {
+  const response = await axios.post(baseUrl, { content: anecdoteContent, votes: 0})
+  return response.data
+}
+
+const methods = { getAll, save };
 export default methods; 
