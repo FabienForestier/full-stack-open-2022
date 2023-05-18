@@ -1,13 +1,18 @@
 import { useMutation, useQueryClient } from 'react-query';
+import { useDisplayNotification } from '../NotificationContext';
 import AnecdoteService from '../services/anecdotes';
 
 const AnecdoteForm = () => {
+  const displayNotification = useDisplayNotification();
   const queryClient = useQueryClient()
   const newAnecdoteMutation = useMutation(AnecdoteService.create, {
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log(data)
       queryClient.invalidateQueries('anecdotes')
+      displayNotification('Created anecdote: ' + data.content)
     }
   });
+  
   const onCreate = (event) => {
     event.preventDefault()
     const content = event.target.anecdote.value

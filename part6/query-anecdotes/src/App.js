@@ -1,13 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useDisplayNotification } from './NotificationContext';
 import AnecdoteForm from './components/AnecdoteForm';
 import Notification from './components/Notification';
 import AnecdoteService from './services/anecdotes';
 
 const App = () => {
+  const displayNotification =  useDisplayNotification();
   const queryClient = useQueryClient()
   const voteForAnecdoteMutation = useMutation(AnecdoteService.vote, {
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries('anecdotes')
+      displayNotification('You voted for: ' +  data.content)
     }
   })
 
