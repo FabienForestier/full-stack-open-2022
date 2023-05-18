@@ -7,9 +7,11 @@ const AnecdoteForm = () => {
   const queryClient = useQueryClient()
   const newAnecdoteMutation = useMutation(AnecdoteService.create, {
     onSuccess: (data) => {
-      console.log(data)
       queryClient.invalidateQueries('anecdotes')
       displayNotification('Created anecdote: ' + data.content)
+    },
+    onError: () => {
+      displayNotification('Too short, anecdote must be of 5 characters minimum.')
     }
   });
   
