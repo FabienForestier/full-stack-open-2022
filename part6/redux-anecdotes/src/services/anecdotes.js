@@ -12,5 +12,12 @@ const save = async (anecdoteContent) => {
   return response.data
 }
 
-const methods = { getAll, save };
+const vote = async (id) => {
+  const anecdoteUrl = `${baseUrl}/${id}`;
+  const response = await axios.get(anecdoteUrl);
+  const updated = await axios.put(anecdoteUrl, { ...response.data, votes: response.data.votes + 1})
+  return updated.data;
+}
+
+const methods = { getAll, save, vote };
 export default methods; 
