@@ -29,4 +29,10 @@ export const initializeAnecdotes = () => {
     dispatch(setAnecdotes(anecdotes));
   }
 }
+export const saveAnecdote = (content) => {
+  return async dispatch => {
+    const anecdote = await anecdotesService.save(content);
+    dispatch(newAnecdote(anecdote))
+  }
+}
 export default anecdotesSlice.reducer;
