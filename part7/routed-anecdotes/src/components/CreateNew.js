@@ -14,6 +14,11 @@ const CreateNew = ({ addNew}) => {
       votes: 0
     })
   }
+  const resetForm = () => {
+    content.reset();
+    author.reset();
+    info.reset();
+  }
 
   return (
     <div>
@@ -31,7 +36,8 @@ const CreateNew = ({ addNew}) => {
           url for more info
           <input {...info} />
         </div>
-        <button>create</button>
+        <button type='submit'>create</button>
+        <button type='button' onClick={resetForm}>reset</button>
       </form>
     </div>
   )
