@@ -7,22 +7,16 @@ import Togglable from './components/Togglable';
 import UserInfo from './components/UserInfo';
 import authService from './services/auth';
 import blogService from './services/blogs';
+import { useNotification } from './services/notification';
 
 function App() {
+  const [notification, notify] = useNotification();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(undefined);
   const [blogs, setBlogs] = useState([]);
-  const [notification, setNotification] = useState(null);
   const blogFormToggleRef = useRef();
   const blogFormRef = useRef();
-
-  const displayMessage = (messageToDisplay, type) => {
-    setNotification({ message: messageToDisplay, type });
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000);
-  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -32,7 +26,7 @@ function App() {
       setUsername('');
       setPassword('');
     } catch (exception) {
-      displayMessage('Wrong credentials', 'error');
+      notify('Wrong credentials', 'error');
     }
   };
 
@@ -52,9 +46,9 @@ function App() {
       blogFormToggleRef.current.toggleVisibility();
       setBlogs(blogs.concat(newBlog));
       resetBlogForm();
-      displayMessage(`A new blog ${newBlog.title} by ${newBlog.author} has been added`, 'success');
+      notify(`A new blog ${newBlog.title} by ${newBlog.author} has been added`, 'success');
     } catch (error) {
-      displayMessage('Failed to add the blog', 'error');
+      notify('Failed to add the blog', 'error');
     }
   };
 
@@ -72,7 +66,7 @@ function App() {
           .sort((prev, current) => current.likes - prev.likes)
       );
     } catch (error) {
-      displayMessage('Failed to like the blog', 'error');
+      notify('Failed to like the blog', 'error');
     }
   };
 
@@ -95,7 +89,7 @@ function App() {
         }, [])
       );
     } catch (error) {
-      displayMessage('Failed to delete the blog', 'error');
+      notify('Failed to delete the blog', 'error');
     }
   };
 
