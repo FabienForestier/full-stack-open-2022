@@ -56,7 +56,9 @@ const BlogForm = forwardRef(({ addBlog }, refs) => {
           onChange={({ target }) => setUrl(target.value)}
         />
       </div>
-      <button data-cy="send-button" data-testid="send-button" type="submit">Add</button>
+      <button data-cy="send-button" data-testid="send-button" type="submit">
+        Add
+      </button>
     </form>
   );
 });

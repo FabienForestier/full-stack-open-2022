@@ -16,7 +16,14 @@ const errorStyle = {
 };
 
 function Notification({ notification }) {
-  return notification ? <div data-cy="notification" style={notification.type === 'error' ? errorStyle : successStyle}>{notification.message}</div> : null;
+  return notification ? (
+    <div
+      data-cy="notification"
+      style={notification.type === 'error' ? errorStyle : successStyle}
+    >
+      {notification.message}
+    </div>
+  ) : null;
 }
 
 export default Notification;

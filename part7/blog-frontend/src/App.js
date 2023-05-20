@@ -52,7 +52,10 @@ function App() {
       blogFormToggleRef.current.toggleVisibility();
       setBlogs(blogs.concat(newBlog));
       resetBlogForm();
-      displayMessage(`A new blog ${newBlog.title} by ${newBlog.author} has been added`, 'success');
+      displayMessage(
+        `A new blog ${newBlog.title} by ${newBlog.author} has been added`,
+        'success'
+      );
     } catch (error) {
       displayMessage('Failed to add the blog', 'error');
     }
@@ -61,29 +64,39 @@ function App() {
   const handleLikeBlog = async (likedBlog) => {
     try {
       await blogService.update(likedBlog);
-      setBlogs((prevState) => prevState.map((blog) => {
-        if (blog.id === likedBlog.id) {
-          return { ...blog, ...likedBlog };
-        }
-        return blog;
-      }).sort((prev, current) => current.likes - prev.likes));
+      setBlogs((prevState) =>
+        prevState
+          .map((blog) => {
+            if (blog.id === likedBlog.id) {
+              return { ...blog, ...likedBlog };
+            }
+            return blog;
+          })
+          .sort((prev, current) => current.likes - prev.likes)
+      );
     } catch (error) {
       displayMessage('Failed to like the blog', 'error');
     }
   };
 
   const handleRemoveBlog = async (blogToDelete) => {
-    if (window.confirm(`Are you sure you want to delete ${blogToDelete.title} by ${blogToDelete.author}`) === false) {
+    if (
+      window.confirm(
+        `Are you sure you want to delete ${blogToDelete.title} by ${blogToDelete.author}`
+      ) === false
+    ) {
       return;
     }
     try {
       await blogService.remove(blogToDelete.id);
-      setBlogs((prevState) => prevState.reduce((processedBlogs, blog) => {
-        if (blog.id === blogToDelete.id) {
-          return processedBlogs;
-        }
-        return processedBlogs.concat(blog);
-      }, []));
+      setBlogs((prevState) =>
+        prevState.reduce((processedBlogs, blog) => {
+          if (blog.id === blogToDelete.id) {
+            return processedBlogs;
+          }
+          return processedBlogs.concat(blog);
+        }, [])
+      );
     } catch (error) {
       displayMessage('Failed to delete the blog', 'error');
     }
@@ -120,7 +133,12 @@ function App() {
         <h2>blogs</h2>
         <UserInfo name={user.name} logout={logout} />
         <Notification notification={notification} />
-        <Togglable dataCy="create-blog-button" label="Create a blog" handleCancel={resetBlogForm} ref={blogFormToggleRef}>
+        <Togglable
+          dataCy="create-blog-button"
+          label="Create a blog"
+          handleCancel={resetBlogForm}
+          ref={blogFormToggleRef}
+        >
           <h2>Create a new blog</h2>
           <BlogForm addBlog={addNewBlog} ref={blogFormRef} />
         </Togglable>
@@ -151,7 +169,6 @@ function App() {
         setPassword={setPassword}
         handleLogin={handleLogin}
       />
-
     </div>
   );
 }

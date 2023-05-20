@@ -1,5 +1,9 @@
 function LoginForm({
-  username, password, setUsername, setPassword, handleLogin,
+  username,
+  password,
+  setUsername,
+  setPassword,
+  handleLogin,
 }) {
   return (
     <form onSubmit={handleLogin}>
@@ -23,7 +27,9 @@ function LoginForm({
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button data-cy="login-button" type="submit">Login</button>
+      <button data-cy="login-button" type="submit">
+        Login
+      </button>
     </form>
   );
 }
