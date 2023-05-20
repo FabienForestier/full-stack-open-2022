@@ -10,10 +10,7 @@ const getLocalUser = () => {
 
 const login = async (credentials) => {
   const response = await axios.post(baseUrl, credentials);
-  window.localStorage.setItem(
-    localStorageUserKey,
-    JSON.stringify(response.data)
-  );
+  window.localStorage.setItem(localStorageUserKey, JSON.stringify(response.data));
   return response.data;
 };
 

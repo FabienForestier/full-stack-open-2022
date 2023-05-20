@@ -13,7 +13,7 @@ const BlogForm = forwardRef(({ addBlog }, refs) => {
   };
 
   useImperativeHandle(refs, () => ({
-    reset,
+    reset
   }));
 
   const onSubmit = (event) => {
@@ -64,7 +64,7 @@ const BlogForm = forwardRef(({ addBlog }, refs) => {
 });
 
 BlogForm.propTypes = {
-  addBlog: PropTypes.func.isRequired,
+  addBlog: PropTypes.func.isRequired
 };
 BlogForm.displayName = 'BlogForm';
 

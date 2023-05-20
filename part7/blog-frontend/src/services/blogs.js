@@ -5,8 +5,8 @@ let token = null;
 
 const getAuthHeaders = (userToken) => ({
   headers: {
-    Authorization: `bearer ${userToken}`,
-  },
+    Authorization: `bearer ${userToken}`
+  }
 });
 
 const setToken = (userToken) => {
@@ -14,10 +14,7 @@ const setToken = (userToken) => {
 };
 
 const getAll = async () => {
-  const response = await axios.get(
-    `${baseUrl}?sort=likes`,
-    getAuthHeaders(token)
-  );
+  const response = await axios.get(`${baseUrl}?sort=likes`, getAuthHeaders(token));
   return response.data;
 };
 
@@ -27,19 +24,12 @@ const create = async (blog) => {
 };
 
 const update = async ({ id, likes }) => {
-  const response = await axios.put(
-    `${baseUrl}/${id}`,
-    { likes },
-    getAuthHeaders(token)
-  );
+  const response = await axios.put(`${baseUrl}/${id}`, { likes }, getAuthHeaders(token));
   return response.data;
 };
 
 const remove = async (id) => {
-  const response = await axios.delete(
-    `${baseUrl}/${id}`,
-    getAuthHeaders(token)
-  );
+  const response = await axios.delete(`${baseUrl}/${id}`, getAuthHeaders(token));
   return response.data;
 };
 
@@ -48,5 +38,5 @@ export default {
   setToken,
   create,
   update,
-  remove,
+  remove
 };

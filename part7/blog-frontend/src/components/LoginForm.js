@@ -1,10 +1,4 @@
-function LoginForm({
-  username,
-  password,
-  setUsername,
-  setPassword,
-  handleLogin,
-}) {
+function LoginForm({ username, password, setUsername, setPassword, handleLogin }) {
   return (
     <form onSubmit={handleLogin}>
       <div>

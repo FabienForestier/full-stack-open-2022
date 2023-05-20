@@ -10,7 +10,7 @@ const blog = {
   id: 1,
   title: 'Blog 1',
   likes: 5,
-  author: 'Ken Follet',
+  author: 'Ken Follet'
 };
 
 beforeEach(() => {

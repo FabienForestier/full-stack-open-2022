@@ -5,11 +5,11 @@ function Blog({ blog, showDeleteButton, handleLikeBlog, handleRemoveBlog }) {
   const cardStyle = {
     boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
     marginBottom: '8px',
-    padding: '8px',
+    padding: '8px'
   };
   const deleteButtonStyle = {
     color: 'white',
-    backgroundColor: 'red',
+    backgroundColor: 'red'
   };
 
   return !viewDetails ? (
@@ -19,8 +19,7 @@ function Blog({ blog, showDeleteButton, handleLikeBlog, handleRemoveBlog }) {
         type="button"
         data-cy="view-details-button"
         data-testid="view-details-button"
-        onClick={() => setViewDetails(true)}
-      >
+        onClick={() => setViewDetails(true)}>
         View
       </button>
     </div>
@@ -28,11 +27,7 @@ function Blog({ blog, showDeleteButton, handleLikeBlog, handleRemoveBlog }) {
     <div data-cy="blog-summary-details" style={cardStyle}>
       <div>
         {blog.title}
-        <button
-          data-cy="hide-details-button"
-          type="button"
-          onClick={() => setViewDetails(false)}
-        >
+        <button data-cy="hide-details-button" type="button" onClick={() => setViewDetails(false)}>
           Hide
         </button>
       </div>
@@ -42,8 +37,7 @@ function Blog({ blog, showDeleteButton, handleLikeBlog, handleRemoveBlog }) {
           type="button"
           data-cy="like-button"
           data-testid="like-button"
-          onClick={() => handleLikeBlog({ id: blog.id, likes: blog.likes + 1 })}
-        >
+          onClick={() => handleLikeBlog({ id: blog.id, likes: blog.likes + 1 })}>
           Like
         </button>
       </div>
@@ -54,8 +48,7 @@ function Blog({ blog, showDeleteButton, handleLikeBlog, handleRemoveBlog }) {
             data-cy="delete-button"
             style={deleteButtonStyle}
             type="button"
-            onClick={() => handleRemoveBlog(blog)}
-          >
+            onClick={() => handleRemoveBlog(blog)}>
             Delete
           </button>
         )}

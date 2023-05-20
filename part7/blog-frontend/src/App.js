@@ -52,10 +52,7 @@ function App() {
       blogFormToggleRef.current.toggleVisibility();
       setBlogs(blogs.concat(newBlog));
       resetBlogForm();
-      displayMessage(
-        `A new blog ${newBlog.title} by ${newBlog.author} has been added`,
-        'success'
-      );
+      displayMessage(`A new blog ${newBlog.title} by ${newBlog.author} has been added`, 'success');
     } catch (error) {
       displayMessage('Failed to add the blog', 'error');
     }
@@ -137,8 +134,7 @@ function App() {
           dataCy="create-blog-button"
           label="Create a blog"
           handleCancel={resetBlogForm}
-          ref={blogFormToggleRef}
-        >
+          ref={blogFormToggleRef}>
           <h2>Create a new blog</h2>
           <BlogForm addBlog={addNewBlog} ref={blogFormRef} />
         </Togglable>

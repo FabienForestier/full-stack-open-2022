@@ -10,7 +10,7 @@ test('should call addBlog when form is submitted', async () => {
   const blog = {
     title: 'blog title',
     author: 'ken follet',
-    url: 'https://ken-follet.com',
+    url: 'https://ken-follet.com'
   };
 
   render(<BlogForm addBlog={addBlog} />);

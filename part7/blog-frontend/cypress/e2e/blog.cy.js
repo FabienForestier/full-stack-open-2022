@@ -1,28 +1,28 @@
 const user = {
   name: 'Clark Kent',
   username: 'ckent',
-  password: 'superman',
+  password: 'superman'
 };
 
 const NBABlog = {
   title: 'NBA',
   author: 'Lebron James',
   url: 'https://nba.com',
-  likes: 0,
+  likes: 0
 };
 
 const DCBlog = {
   title: 'DC',
   author: 'Ken Block',
   url: 'https://dc.com',
-  likes: 5,
+  likes: 5
 };
 
 const MarvelBlog = {
   title: 'Marvel',
   author: 'Martin Goodman',
   url: 'https://marvel.com',
-  likes: 4,
+  likes: 4
 };
 
 describe('Blog app', () => {
@@ -48,18 +48,12 @@ describe('Blog app', () => {
     });
 
     it('fails with wrong credentials', () => {
-      cy.get("[data-cy='username-input']")
-        .as('usernameInput')
-        .type(user.username);
+      cy.get("[data-cy='username-input']").as('usernameInput').type(user.username);
       cy.get("[data-cy='password-input']").as('passwordInput').type('wrong');
       cy.get("[data-cy='login-button']").click();
       cy.get('@usernameInput');
       cy.get('@passwordInput');
-      cy.get("[data-cy='notification']").should(
-        'have.css',
-        'color',
-        'rgb(255, 0, 0)'
-      );
+      cy.get("[data-cy='notification']").should('have.css', 'color', 'rgb(255, 0, 0)');
     });
   });
 
@@ -69,24 +63,16 @@ describe('Blog app', () => {
     });
 
     it('A blog can be created', () => {
-      cy.get(
-        '[data-cy=create-blog-button] [data-cy="toggle-display-button"]'
-      ).click();
+      cy.get('[data-cy=create-blog-button] [data-cy="toggle-display-button"]').click();
       cy.get('[data-cy=title-input]').as('titleInput').type(NBABlog.title);
       cy.get('[data-cy=author-input]').as('authorInput').type(NBABlog.author);
       cy.get('[data-cy=url-input]').as('urlInput').type(NBABlog.url);
       cy.get('[data-cy=send-button]').click();
-      cy.get("[data-cy='notification']").should(
-        'have.css',
-        'color',
-        'rgb(0, 128, 0)'
-      );
+      cy.get("[data-cy='notification']").should('have.css', 'color', 'rgb(0, 128, 0)');
       cy.get('@titleInput').should('not.be.visible');
       cy.get('@authorInput').should('not.be.visible');
       cy.get('@urlInput').should('not.be.visible');
-      cy.get('[data-cy=blog-summary]').contains(
-        `${NBABlog.title} ${NBABlog.author}`
-      );
+      cy.get('[data-cy=blog-summary]').contains(`${NBABlog.title} ${NBABlog.author}`);
     });
 
     describe('When a blog has been created', () => {
@@ -126,17 +112,17 @@ describe('Blog app', () => {
         const lois = {
           name: 'Lois',
           username: 'lois',
-          password: 'girlfriend',
+          password: 'girlfriend'
         };
         const cryptoBlog = {
           title: 'Crypto',
           author: 'lex',
-          url: 'https://crypto.com',
+          url: 'https://crypto.com'
         };
         cy.request('POST', `${Cypress.env('BACKEND')}/users/`, lois);
         cy.login({ username: lois.username, password: lois.password });
         cy.createBlog({
-          blog: cryptoBlog,
+          blog: cryptoBlog
         });
         cy.visit('');
         cy.login({ username: user.username, password: user.password });
@@ -161,9 +147,7 @@ describe('Blog app', () => {
 
       it.only('should order list by most likes', () => {
         cy.get('[data-cy=blog-summary]').eq(0).should('contain', DCBlog.title);
-        cy.get('[data-cy=blog-summary]')
-          .eq(1)
-          .should('contain', MarvelBlog.title);
+        cy.get('[data-cy=blog-summary]').eq(1).should('contain', MarvelBlog.title);
         cy.get('[data-cy=blog-summary]').eq(2).should('contain', NBABlog.title);
         cy.get('[data-cy=blog-summary]')
           .contains(MarvelBlog.title)
@@ -175,10 +159,7 @@ describe('Blog app', () => {
           .as('blogDetails')
           .find('[data-cy=blog-number-of-likes]')
           .as('numberOfLikes');
-        cy.get('@blogDetails')
-          .find('[data-cy=like-button]')
-          .as('likeButton')
-          .click();
+        cy.get('@blogDetails').find('[data-cy=like-button]').as('likeButton').click();
         cy.get('@numberOfLikes').should('have.text', MarvelBlog.likes + 1);
         cy.get('@likeButton').click();
         cy.get('@numberOfLikes').should('have.text', MarvelBlog.likes + 2);
@@ -186,9 +167,7 @@ describe('Blog app', () => {
           .contains(MarvelBlog.title)
           .find('[data-cy=hide-details-button]')
           .click();
-        cy.get('[data-cy=blog-summary]')
-          .eq(0)
-          .should('contain', MarvelBlog.title);
+        cy.get('[data-cy=blog-summary]').eq(0).should('contain', MarvelBlog.title);
         cy.get('[data-cy=blog-summary]').eq(1).should('contain', DCBlog.title);
         cy.get('[data-cy=blog-summary]').eq(2).should('contain', NBABlog.title);
       });
