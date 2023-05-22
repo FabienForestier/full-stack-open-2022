@@ -5,6 +5,7 @@ import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import UserInfo from './components/UserInfo';
+import useBlogs from './hooks/blogs';
 import { useNotification } from './hooks/notification';
 import authService from './services/auth';
 import blogService from './services/blogs';
@@ -14,7 +15,7 @@ function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(undefined);
-  const [blogs, setBlogs] = useState([]);
+  const blogs = useBlogs(user);
   const blogFormToggleRef = useRef();
   const blogFormRef = useRef();
 
@@ -44,7 +45,7 @@ function App() {
     try {
       const newBlog = await blogService.create(blog);
       blogFormToggleRef.current.toggleVisibility();
-      setBlogs(blogs.concat(newBlog));
+      // setBlogs(blogs.concat(newBlog));
       resetBlogForm();
       notify(`A new blog ${newBlog.title} by ${newBlog.author} has been added`, 'success');
     } catch (error) {
@@ -55,16 +56,16 @@ function App() {
   const handleLikeBlog = async (likedBlog) => {
     try {
       await blogService.update(likedBlog);
-      setBlogs((prevState) =>
-        prevState
-          .map((blog) => {
-            if (blog.id === likedBlog.id) {
-              return { ...blog, ...likedBlog };
-            }
-            return blog;
-          })
-          .sort((prev, current) => current.likes - prev.likes)
-      );
+      // setBlogs((prevState) =>
+      //   prevState
+      //     .map((blog) => {
+      //       if (blog.id === likedBlog.id) {
+      //         return { ...blog, ...likedBlog };
+      //       }
+      //       return blog;
+      //     })
+      //     .sort((prev, current) => current.likes - prev.likes)
+      // );
     } catch (error) {
       notify('Failed to like the blog', 'error');
     }
@@ -80,27 +81,16 @@ function App() {
     }
     try {
       await blogService.remove(blogToDelete.id);
-      setBlogs((prevState) =>
-        prevState.reduce((processedBlogs, blog) => {
-          if (blog.id === blogToDelete.id) {
-            return processedBlogs;
-          }
-          return processedBlogs.concat(blog);
-        }, [])
-      );
+      // setBlogs((prevState) =>
+      //   prevState.reduce((processedBlogs, blog) => {
+      //     if (blog.id === blogToDelete.id) {
+      //       return processedBlogs;
+      //     }
+      //     return processedBlogs.concat(blog);
+      //   }, [])
+      // );
     } catch (error) {
       notify('Failed to delete the blog', 'error');
-    }
-  };
-
-  const loadBlogs = async () => {
-    try {
-      const blogsFromBackend = await blogService.getAll();
-      setBlogs(blogsFromBackend);
-    } catch (error) {
-      if (error.request.status === 401) {
-        logout();
-      }
     }
   };
 
@@ -108,15 +98,9 @@ function App() {
     const localUser = authService.getLocalUser();
     if (localUser) {
       setUser(localUser);
+      blogService.setToken(localUser.token);
     }
   }, []);
-
-  useEffect(() => {
-    if (user) {
-      blogService.setToken(user.token);
-      loadBlogs();
-    }
-  }, [user]);
 
   if (user) {
     return (
@@ -135,15 +119,16 @@ function App() {
 
         <h2>Your blogs</h2>
         {user.username}
-        {blogs.map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            showDeleteButton={blog.user.username === user.username}
-            handleLikeBlog={handleLikeBlog}
-            handleRemoveBlog={handleRemoveBlog}
-          />
-        ))}
+        {blogs.length &&
+          blogs.map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              showDeleteButton={blog.user.username === user.username}
+              handleLikeBlog={handleLikeBlog}
+              handleRemoveBlog={handleRemoveBlog}
+            />
+          ))}
       </div>
     );
   }
