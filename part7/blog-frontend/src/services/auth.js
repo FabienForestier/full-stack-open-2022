@@ -1,6 +1,5 @@
-import axios from '../utils/axios';
+import authApiService from '../api/auth';
 
-const baseUrl = '/api/login';
 const localStorageUserKey = 'blogAppUser';
 
 const getLocalUser = () => {
@@ -9,9 +8,9 @@ const getLocalUser = () => {
 };
 
 const login = async (credentials) => {
-  const response = await axios.post(baseUrl, credentials);
-  window.localStorage.setItem(localStorageUserKey, JSON.stringify(response.data));
-  return response.data;
+  const token = await authApiService.login(credentials);
+  window.localStorage.setItem(localStorageUserKey, JSON.stringify(token));
+  return token;
 };
 
 const logout = () => {

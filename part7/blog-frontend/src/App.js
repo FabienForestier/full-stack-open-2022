@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import blogService from './api/blogs';
+import blogsApiService from './api/blogs';
 import Blog from './components/Blog';
 import BlogForm from './components/BlogForm';
 import LoginForm from './components/LoginForm';
@@ -34,7 +34,7 @@ function App() {
   const logout = () => {
     setUser(undefined);
     authService.logout();
-    blogService.setToken(undefined);
+    blogsApiService.setToken(undefined);
   };
 
   const resetBlogForm = () => {
@@ -61,11 +61,8 @@ function App() {
   };
 
   const handleRemoveBlog = async (blogToDelete) => {
-    if (
-      window.confirm(
-        `Are you sure you want to delete ${blogToDelete.title} by ${blogToDelete.author}`
-      ) === false
-    ) {
+    const userConfirmedRemoving = askUserConfirmationForBlogRemoval(blogToDelete);
+    if (userConfirmedRemoving === false) {
       return;
     }
     try {
@@ -75,11 +72,15 @@ function App() {
     }
   };
 
+  const askUserConfirmationForBlogRemoval = (blog) => {
+    return window.confirm(`Are you sure you want to delete ${blog.title} by ${blog.author}`);
+  };
+
   useEffect(() => {
     const localUser = authService.getLocalUser();
     if (localUser) {
       setUser(localUser);
-      blogService.setToken(localUser.token);
+      blogsApiService.setToken(localUser.token);
     }
   }, []);
 

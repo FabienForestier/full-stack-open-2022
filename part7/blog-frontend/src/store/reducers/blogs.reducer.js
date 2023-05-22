@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import blogsService from '../../api/blogs';
+import blogsApiService from '../../api/blogs';
 
 const blogsSlice = createSlice({
   name: 'blogs',
@@ -27,28 +27,28 @@ const { set, create, update, remove } = blogsSlice.actions;
 
 export const initializeBlogs = () => {
   return async (dispatch) => {
-    const blogs = await blogsService.getAll();
+    const blogs = await blogsApiService.getAll();
     return dispatch(set(blogs));
   };
 };
 
 export const createBlog = (blog) => {
   return async (dispatch) => {
-    const newBlog = await blogsService.create(blog);
+    const newBlog = await blogsApiService.create(blog);
     return dispatch(create(newBlog));
   };
 };
 
 export const likeBlog = (blogId) => {
   return async (dispatch) => {
-    const updatedBlog = await blogsService.like(blogId);
+    const updatedBlog = await blogsApiService.like(blogId);
     return dispatch(update(updatedBlog));
   };
 };
 
 export const removeBlog = (blogId) => {
   return async (dispatch) => {
-    await blogsService.remove(blogId);
+    await blogsApiService.remove(blogId);
     return dispatch(remove(blogId));
   };
 };
