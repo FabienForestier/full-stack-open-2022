@@ -55,4 +55,15 @@ blogRouter.put('/:id', async (request, response) => {
   response.json(updatedBlog)
 })
 
+blogRouter.post('/:id/like', async (request, response) => {
+  const blogId = request.params.id
+  const blog = await Blog.findById(blogId)
+  if(!blog) {
+    return response.status(400).send({ error: 'No matching block found.' })
+  }
+
+  const updatedBlog =  await Blog.findByIdAndUpdate(blogId, { likes: blog.likes + 1 }, { new: true, runValidators: true, context: 'query' })
+  response.json(updatedBlog)
+})
+
 module.exports = blogRouter

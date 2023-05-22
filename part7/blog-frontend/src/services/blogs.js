@@ -33,10 +33,16 @@ const remove = async (id) => {
   return response.data;
 };
 
+const like = async (id) => {
+  const response = await axios.post(`${baseUrl}/${id}/like`, {}, getAuthHeaders(token));
+  return response.data;
+};
+
 export default {
   getAll,
   setToken,
   create,
   update,
-  remove
+  remove,
+  like
 };

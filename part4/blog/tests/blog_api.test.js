@@ -140,7 +140,7 @@ describe('addition of a new blog', () => {
   })
 })
 
-describe('deletion of a note', () => {
+describe('deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
@@ -162,7 +162,7 @@ describe('deletion of a note', () => {
   })
 })
 
-describe('update of a note', () => {
+describe('update of a blog', () => {
   const newLikes = 10
   test('succeeds with status code 200 if id is valid and likes provided', async () => {
     const blogsAtStart = await helper.blogsInDb()
@@ -201,6 +201,23 @@ describe('update of a note', () => {
       .set({ Authorization: `Bearer ${user.token}` })
       .send({ })
       .expect(400)
+  })
+})
+
+describe('like of a blog', () => {
+  test('increment the number of likes of the blog by one', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToLike = blogsAtStart[0]
+
+    await api
+      .post(`/api/blogs/${blogToLike.id}/like`)
+      .set({ Authorization: `Bearer ${user.token}` })
+      .expect(200)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const updatedBlog =  blogsAtEnd.find((blog) => blog.id === blogToLike.id)
+
+    expect(updatedBlog.likes).toBe(blogToLike.likes + 1)
   })
 })
 

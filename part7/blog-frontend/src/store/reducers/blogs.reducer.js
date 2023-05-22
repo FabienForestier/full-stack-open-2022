@@ -5,28 +5,51 @@ const blogsSlice = createSlice({
   name: 'blogs',
   initialState: [],
   reducers: {
-    setBlogs(_, { payload: blogs }) {
+    set(_, { payload: blogs }) {
       return blogs;
     },
-    addBlog(state, { payload: blog }) {
-      return state.concat(blog);
+    create(state, { payload: blog }) {
+      state.push(blog);
+    },
+    update(state, { payload: updatedBlog }) {
+      const index = state.findIndex((blog) => blog.id === updatedBlog.id);
+      state.splice(index, 1, updatedBlog);
+      state.sort((prev, current) => current.likes - prev.likes);
+    },
+    remove(state, { payload: blogId }) {
+      const index = state.findIndex((blog) => blog.id === blogId);
+      state.splice(index, 1);
     }
   }
 });
 
-const { setBlogs, addBlog } = blogsSlice.actions;
+const { set, create, update, remove } = blogsSlice.actions;
 
 export const initializeBlogs = () => {
   return async (dispatch) => {
     const blogs = await blogsService.getAll();
-    return dispatch(setBlogs(blogs));
+    return dispatch(set(blogs));
   };
 };
 
 export const createBlog = (blog) => {
   return async (dispatch) => {
     const newBlog = await blogsService.create(blog);
-    return dispatch(addBlog(newBlog));
+    return dispatch(create(newBlog));
+  };
+};
+
+export const likeBlog = (blogId) => {
+  return async (dispatch) => {
+    const updatedBlog = await blogsService.like(blogId);
+    return dispatch(update(updatedBlog));
+  };
+};
+
+export const removeBlog = (blogId) => {
+  return async (dispatch) => {
+    await blogsService.remove(blogId);
+    return dispatch(remove(blogId));
   };
 };
 

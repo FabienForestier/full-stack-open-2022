@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createBlog, initializeBlogs } from '../store/reducers/blogs.reducer';
+import { createBlog, initializeBlogs, likeBlog, removeBlog } from '../store/reducers/blogs.reducer';
 
 const useBlogs = (user) => {
   const dispatch = useDispatch();
@@ -12,11 +12,19 @@ const useBlogs = (user) => {
     }
   }, [user]);
 
-  const addBlog = async (blog) => {
-    return dispatch(createBlog(blog));
+  return {
+    blogs,
+    addBlog: async (blog) => {
+      return dispatch(createBlog(blog));
+    },
+    likeBlog: async (blogId) => {
+      console.log(blogId);
+      return dispatch(likeBlog(blogId));
+    },
+    removeBlog: async (blogId) => {
+      return dispatch(removeBlog(blogId));
+    }
   };
-
-  return { blogs, addBlog };
 };
 
 export default useBlogs;

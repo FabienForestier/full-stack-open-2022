@@ -15,7 +15,7 @@ function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(undefined);
-  const { blogs, addBlog } = useBlogs(user);
+  const { blogs, addBlog, likeBlog, removeBlog } = useBlogs(user);
   const blogFormToggleRef = useRef();
   const blogFormRef = useRef();
 
@@ -54,17 +54,7 @@ function App() {
 
   const handleLikeBlog = async (likedBlog) => {
     try {
-      await blogService.update(likedBlog);
-      // setBlogs((prevState) =>
-      //   prevState
-      //     .map((blog) => {
-      //       if (blog.id === likedBlog.id) {
-      //         return { ...blog, ...likedBlog };
-      //       }
-      //       return blog;
-      //     })
-      //     .sort((prev, current) => current.likes - prev.likes)
-      // );
+      await likeBlog(likedBlog.id);
     } catch (error) {
       notify('Failed to like the blog', 'error');
     }
@@ -79,15 +69,7 @@ function App() {
       return;
     }
     try {
-      await blogService.remove(blogToDelete.id);
-      // setBlogs((prevState) =>
-      //   prevState.reduce((processedBlogs, blog) => {
-      //     if (blog.id === blogToDelete.id) {
-      //       return processedBlogs;
-      //     }
-      //     return processedBlogs.concat(blog);
-      //   }, [])
-      // );
+      await removeBlog(blogToDelete.id);
     } catch (error) {
       notify('Failed to delete the blog', 'error');
     }
