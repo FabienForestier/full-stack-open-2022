@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import blogService from './api/blogs';
 import Blog from './components/Blog';
 import BlogForm from './components/BlogForm';
 import LoginForm from './components/LoginForm';
@@ -8,7 +9,6 @@ import UserInfo from './components/UserInfo';
 import useBlogs from './hooks/blogs';
 import { useNotification } from './hooks/notification';
 import authService from './services/auth';
-import blogService from './services/blogs';
 
 function App() {
   const [notification, notify] = useNotification();
