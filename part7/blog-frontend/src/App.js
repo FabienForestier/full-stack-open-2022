@@ -5,9 +5,9 @@ import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import UserInfo from './components/UserInfo';
+import { useNotification } from './hooks/notification';
 import authService from './services/auth';
 import blogService from './services/blogs';
-import { useNotification } from './services/notification';
 
 function App() {
   const [notification, notify] = useNotification();
