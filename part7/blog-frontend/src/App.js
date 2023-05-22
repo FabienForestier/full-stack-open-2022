@@ -15,7 +15,7 @@ function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(undefined);
-  const blogs = useBlogs(user);
+  const { blogs, addBlog } = useBlogs(user);
   const blogFormToggleRef = useRef();
   const blogFormRef = useRef();
 
@@ -43,11 +43,10 @@ function App() {
 
   const addNewBlog = async (blog) => {
     try {
-      const newBlog = await blogService.create(blog);
+      await addBlog(blog);
       blogFormToggleRef.current.toggleVisibility();
-      // setBlogs(blogs.concat(newBlog));
       resetBlogForm();
-      notify(`A new blog ${newBlog.title} by ${newBlog.author} has been added`, 'success');
+      notify(`A new blog ${blog.title} by ${blog.author} has been added`, 'success');
     } catch (error) {
       notify('Failed to add the blog', 'error');
     }
